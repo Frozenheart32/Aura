@@ -31,6 +31,6 @@ protected:
 
 public:
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override { return AbilitySystemComponent; } 
-	UAttributeSet* GetAttributeSet() const { return AttributeSet; }
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	UAttributeSet* GetAttributeSet() const;
 };
