@@ -19,6 +19,9 @@ public:
 
 	AAuraEnemy();
 
+	UPROPERTY(BlueprintReadOnly)
+	bool bHighlighted = false;
+
 protected:
 
 
