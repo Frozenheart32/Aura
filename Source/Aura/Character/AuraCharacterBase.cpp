@@ -20,3 +20,13 @@ void AAuraCharacterBase::BeginPlay()
 	
 }
 
+UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
+{
+	return AbilitySystemComponent;
+}
+
+UAttributeSet* AAuraCharacterBase::GetAttributeSet() const
+{
+	return AttributeSet;
+}
+
