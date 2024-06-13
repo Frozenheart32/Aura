@@ -66,6 +66,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParams(const FWidgetControllerParams& WCParams);
 	virtual void BroadcastInitialValues();
+	virtual void BindCallbacksToDependencies();
 
 	UFUNCTION(BlueprintCallable, Category = "WidgetController")
 	APlayerController* GetOwningPlayerController() const;

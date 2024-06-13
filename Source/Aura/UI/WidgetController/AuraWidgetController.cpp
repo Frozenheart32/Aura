@@ -16,6 +16,11 @@ void UAuraWidgetController::BroadcastInitialValues()
 	
 }
 
+void UAuraWidgetController::BindCallbacksToDependencies()
+{
+	
+}
+
 APlayerController* UAuraWidgetController::GetOwningPlayerController() const
 {
 	return PlayerController.Get();
