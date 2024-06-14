@@ -24,11 +24,11 @@ void AAuraEffectActor::BeginPlay()
 	
 }
 
-void AAuraEffectActor::ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> GameplayEffectSubclass)
+void AAuraEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectSubclass)
 {
 	check(GameplayEffectSubclass);
 	
-	if(const auto TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Target))
+	if(const auto TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor))
 	{
 		FGameplayEffectContextHandle ContextHandle = TargetASC->MakeEffectContext();
 		ContextHandle.AddSourceObject(this);
