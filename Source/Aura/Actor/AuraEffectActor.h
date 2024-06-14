@@ -70,12 +70,12 @@ protected:
 	
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, meta=(BlueprintProtected))
 	void ApplyEffectToTarget(AActor* TargetActor, const TArray<TSubclassOf<UGameplayEffect>>& GameplayEffectSubclasses);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, meta=(BlueprintProtected))
 	void OnOverlap(AActor* TargetActor);
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintCallable, meta=(BlueprintProtected))
 	void EndOverlap(AActor* TargetActor);
 
 
