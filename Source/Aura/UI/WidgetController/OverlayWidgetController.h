@@ -7,7 +7,7 @@
 #include "Engine/DataTable.h"
 #include "OverlayWidgetController.generated.h"
 
-class UAuraUserWidget;
+class UAuraMessageWidget;
 
 USTRUCT(BlueprintType)
 struct FUIWidgetRow : public FTableRowBase
@@ -21,7 +21,7 @@ struct FUIWidgetRow : public FTableRowBase
 	FText Message = FText{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UAuraUserWidget> MessageWidget;
+	TSubclassOf<UAuraMessageWidget> MessageWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UTexture2D* Image = nullptr;
