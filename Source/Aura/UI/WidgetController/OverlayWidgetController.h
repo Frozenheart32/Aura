@@ -68,4 +68,13 @@ private:
 
 	void ManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxMaxChanged(const FOnAttributeChangeData& Data) const;
+
+	template<class T>
+	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 };
+
+template <class T>
+T* UOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+{
+	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
+}
