@@ -9,7 +9,7 @@
 
 void UAuraMessageWidget::SetMessage(UTexture2D* NewIcon, const FText& NewText)
 {
-	if(Image_Icon)
+	if(Image_Icon && NewIcon)
 	{
 		Image_Icon->SetBrushFromTexture(NewIcon);
 	}

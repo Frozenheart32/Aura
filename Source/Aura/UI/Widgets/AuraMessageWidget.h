@@ -11,7 +11,7 @@ class UTextBlock;
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class AURA_API UAuraMessageWidget : public UAuraUserWidget
 {
 	GENERATED_BODY()
@@ -19,9 +19,9 @@ class AURA_API UAuraMessageWidget : public UAuraUserWidget
 protected:
 	
 	UPROPERTY(meta=(BindWidget))
-	UTextBlock* TextBlock_Message = nullptr;
+	TObjectPtr<UTextBlock> TextBlock_Message = nullptr;
 	UPROPERTY(meta=(BindWidget))
-	UImage* Image_Icon = nullptr;
+	TObjectPtr<UImage> Image_Icon = nullptr;
 
 public:
 
