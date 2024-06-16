@@ -24,22 +24,22 @@ void AAuraCharacterBase::BeginPlay()
 
 void AAuraCharacterBase::InitializePrimaryAttributes() const
 {
-	check(AbilitySystemComponent.IsValid())
+	check(AbilitySystemComponent)
 	check(DefaultPrimaryAttributes);
 
 	const FGameplayEffectContextHandle EffectContextHandle = AbilitySystemComponent->MakeEffectContext();
 	const FGameplayEffectSpecHandle EffectSpecHandle = AbilitySystemComponent->MakeOutgoingSpec(DefaultPrimaryAttributes, 1, EffectContextHandle);
-	AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(), AbilitySystemComponent.Get());
+	AbilitySystemComponent->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(), AbilitySystemComponent);
 }
 
 UAbilitySystemComponent* AAuraCharacterBase::GetAbilitySystemComponent() const
 {
-	return AbilitySystemComponent.Get();
+	return AbilitySystemComponent;
 }
 
 UAttributeSet* AAuraCharacterBase::GetAttributeSet() const
 {
-	return AttributeSet.Get();
+	return AttributeSet;
 }
 
 void AAuraCharacterBase::InitAbilityActorInfo()
