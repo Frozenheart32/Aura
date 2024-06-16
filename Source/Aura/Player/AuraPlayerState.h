@@ -23,14 +23,24 @@ public:
 	AAuraPlayerState();
 
 protected:
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "ASC")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
-public:
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = "OnRep_Level")
+	int32 Level = 1;
 
+public:
+	
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const;
+	
+	FORCEINLINE int32 GetPlayerLevel() { return Level; }
+
+private:
+
+	UFUNCTION()
+	void OnRep_Level(int32 OldLevel) const;
 };
