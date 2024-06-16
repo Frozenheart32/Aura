@@ -52,4 +52,5 @@ void AAuraCharacterBase::InitializeDefaultAttributes() const
 {
 	ApplyEffectToSelf(DefaultPrimaryAttributes, GetPlayerLevel());
 	ApplyEffectToSelf(DefaultSecondaryAttributes, GetPlayerLevel());
+	ApplyEffectToSelf(DefaultVitalAttributes, GetPlayerLevel());
 }
