@@ -45,8 +45,10 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AbilitySystemComponent = AuraPlayerState->GetAbilitySystemComponent();
 	AttributeSet = AuraPlayerState->GetAttributeSet();
 	
-	const auto AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent);
-
+	const auto AuraASC = Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent.Get());
+	
+	check(AuraASC);
+	
 	AuraASC->AbilityActorInfoSet();
 	AuraASC->InitAbilityActorInfo(AuraPlayerState, this);
 
@@ -54,7 +56,9 @@ void AAuraCharacter::InitAbilityActorInfo()
 	{
 		if(const auto AuraHUD = Cast<AAuraHUD>(AuraPlayerController->GetHUD()))
 		{
-			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent, AttributeSet);
+			AuraHUD->InitOverlay(AuraPlayerController, AuraPlayerState, AbilitySystemComponent.Get(), AttributeSet.Get());
 		}
 	}
+
+	InitializePrimaryAttributes();
 }
