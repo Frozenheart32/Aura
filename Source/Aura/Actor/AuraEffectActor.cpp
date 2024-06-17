@@ -62,6 +62,7 @@ void AAuraEffectActor::OnOverlap(AActor* TargetActor)
 	if(InfiniteApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InfiniteGameplayEffectClasses);
+		TargetActor->OnDestroyed.AddDynamic(this, &AAuraEffectActor::OnTargetActorDestroyed);
 	}
 }
 
@@ -87,6 +88,8 @@ void AAuraEffectActor::EndOverlap(AActor* TargetActor)
 	//Remove effect
 	if(InfiniteRemovalPolicy == EEffectRemovalPolicy::RemoveOnEndOverlap)
 	{
+		TargetActor->OnDestroyed.RemoveDynamic(this, &AAuraEffectActor::OnTargetActorDestroyed);
+		
 		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
 		if(!IsValid(TargetASC)) return;
 		
@@ -104,4 +107,23 @@ void AAuraEffectActor::EndOverlap(AActor* TargetActor)
 	}
 }
 
+void AAuraEffectActor::OnTargetActorDestroyed(AActor* DestroyedActor)
+{
+	if(const auto ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(DestroyedActor))
+	{
+		if(ActiveEffectHandles.Contains(ASC))
+		{
+			const FCurrentActiveEffectHandles* HandlesToRemove = ActiveEffectHandles.Find(ASC);
+
+			for (const auto& Handle : HandlesToRemove->Handles)
+			{
+				ASC->RemoveActiveGameplayEffect(Handle);
+			} 
+			
+			ActiveEffectHandles.Remove(ASC);
+		}
+	}
+
+	DestroyedActor->OnDestroyed.RemoveDynamic(this, &AAuraEffectActor::OnTargetActorDestroyed);
+}
 

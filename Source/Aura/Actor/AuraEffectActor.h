@@ -70,7 +70,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintProtected))
 	void ApplyEffectToTarget(AActor* TargetActor, const TArray<TSubclassOf<UGameplayEffect>>& GameplayEffectSubclasses);
-
 	UFUNCTION(BlueprintCallable, meta=(BlueprintProtected))
 	void OnOverlap(AActor* TargetActor);
 	UFUNCTION(BlueprintCallable, meta=(BlueprintProtected))
@@ -78,7 +77,9 @@ protected:
 
 
 private:
-
+	
+	UFUNCTION()
+	void OnTargetActorDestroyed(AActor* DestroyedActor);
 	UPROPERTY()
 	TMap<UAbilitySystemComponent*, FCurrentActiveEffectHandles> ActiveEffectHandles;
 };
