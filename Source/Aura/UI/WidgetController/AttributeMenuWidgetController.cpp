@@ -3,7 +3,6 @@
 
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 
-#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AttributeInfo.h"
 
@@ -15,11 +14,13 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 void UAttributeMenuWidgetController::BroadcastInitialValues()
 {
 	check(AttributeInfo);
-
-	const auto& Tags = FAuraGameplayTags::Get();
 	const UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
 
-	FAuraAttributeInfo Info = AttributeInfo->FindAttributeInfoForTag(Tags.Attributes_Primary_Strength);
-	Info.AttributeValue = AS->GetStrength();
-	AttributeDelegate.Broadcast(Info);
+	for (const auto& [Tag, Attribute] : AS->TagsToAttributes)
+	{
+		FAuraAttributeInfo Info = AttributeInfo->FindAttributeInfoForTag(Tag);
+		FGameplayAttribute Attr = Attribute.Execute();
+		Info.AttributeValue = Attr.GetNumericValue(AS);
+		AttributeDelegate.Broadcast(Info);
+	} 
 }
