@@ -4,13 +4,35 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AuraGameplayTags.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 
+#define ADD_ATTRIBUTE_TO_MAP(Tags, Map, Category, AttributeName)				\
+	FAttributeSignature AttributeName##Delegate;										\
+	AttributeName##Delegate.BindStatic(UAuraAttributeSet::Get##AttributeName##Attribute);		\
+	Map.Add(Tags.Attributes_##Category##_##AttributeName, AttributeName##Delegate);	\
+
 UAuraAttributeSet::UAuraAttributeSet()
 {
+	const auto& Tags = FAuraGameplayTags::Get();
 	
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Primary, Strength);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Primary, Intelligence);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Primary, Resilience);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Primary, Vigor);
+
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Secondary, Armor);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Secondary, ArmorPenetration);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Secondary, BlockChance);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Secondary, CriticalHitChance);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Secondary, CriticalHitDamage);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Secondary, CriticalHitResistance);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Secondary, HealthRegeneration);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Secondary, ManaRegeneration);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Secondary, MaxHealth);
+	ADD_ATTRIBUTE_TO_MAP(Tags, TagsToAttributes, Secondary, MaxMana);
 }
 
 void UAuraAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
