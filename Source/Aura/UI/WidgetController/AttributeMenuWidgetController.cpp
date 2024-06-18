@@ -21,6 +21,5 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 
 	FAuraAttributeInfo Info = AttributeInfo->FindAttributeInfoForTag(Tags.Attributes_Primary_Strength);
 	Info.AttributeValue = AS->GetStrength();
-
 	AttributeDelegate.Broadcast(Info);
 }
