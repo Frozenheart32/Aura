@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class UAuraInputConfig;
 struct FInputActionValue;
 class UInputMappingContext;
 class UInputAction;
@@ -33,6 +35,9 @@ protected:
 private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UAuraInputConfig> InputConfig;
+	
+	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputMappingContext> AuraContext;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
@@ -46,4 +51,11 @@ private:
 
 	UFUNCTION()
 	void CursorTrace();
+
+	UFUNCTION()
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	UFUNCTION()
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	UFUNCTION()
+	void AbilityInputTagHeld(FGameplayTag InputTag);
 };
