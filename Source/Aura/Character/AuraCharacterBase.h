@@ -29,6 +29,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	FName WeaponTipSocketName;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -53,6 +55,8 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const;
+
+	virtual FVector GetCombatSocketLocation() const override;
 
 protected:
 
