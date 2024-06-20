@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class USplineComponent;
 class UAuraInputConfig;
 struct FInputActionValue;
 class UInputMappingContext;
@@ -34,6 +35,18 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
+
+	FVector CachedDestination = FVector::ZeroVector;
+	float FollowTime = 0.f;
+	float ShortThreshold = 0.5f;
+	bool bAutoRunning = false;
+	bool bTargeting = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Input")
+	float AutoRunAcceptanceRadius = 50.f;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USplineComponent> Spline; 
 
 	UPROPERTY()
 	mutable TWeakObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;

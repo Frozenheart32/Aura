@@ -16,11 +16,6 @@ class AURA_API UAuraInputComponent : public UEnhancedInputComponent
 {
 	GENERATED_BODY()
 
-public:
-
-
-
-
 
 public:
 
