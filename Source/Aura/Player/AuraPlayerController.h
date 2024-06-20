@@ -12,6 +12,7 @@ struct FInputActionValue;
 class UInputMappingContext;
 class UInputAction;
 class IEnemyInterface;
+class UAuraAbilitySystemComponent;
 
 /**
  * 
@@ -33,6 +34,9 @@ protected:
 	virtual void SetupInputComponent() override;
 
 private:
+
+	UPROPERTY()
+	mutable TWeakObjectPtr<UAuraAbilitySystemComponent> AuraAbilitySystemComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UAuraInputConfig> InputConfig;
@@ -58,4 +62,6 @@ private:
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	UFUNCTION()
 	void AbilityInputTagHeld(FGameplayTag InputTag);
+
+	UAuraAbilitySystemComponent* GetASC() const;
 };
