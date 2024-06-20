@@ -20,3 +20,8 @@ const UInputAction* UAuraInputConfig::FindAbilityInputActionForTag(const FGamepl
 
 	return nullptr;
 }
+
+const TArray<FAuraInputAction>& UAuraInputConfig::GetAbilityInputActions() const
+{
+	return AbilityInputActions;
+}

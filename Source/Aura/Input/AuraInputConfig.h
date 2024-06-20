@@ -29,11 +29,15 @@ class AURA_API UAuraInputConfig : public UDataAsset
 {
 	GENERATED_BODY()
 
-public:
+protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TArray<FAuraInputAction> AbilityInputActions;
 
+public:
+	
 	UFUNCTION(BlueprintCallable)
 	const UInputAction* FindAbilityInputActionForTag(const FGameplayTag& Input, bool bLogNotFound = false) const;
+	
+	const TArray<FAuraInputAction>& GetAbilityInputActions() const;
 };
