@@ -62,6 +62,7 @@ private:
 	
 	TWeakInterfacePtr<IEnemyInterface> LastActor;
 	TWeakInterfacePtr<IEnemyInterface> ThisActor;
+	FHitResult CursorHit;
 
 	UFUNCTION()
 	void Move(const FInputActionValue& InputActionValue);
