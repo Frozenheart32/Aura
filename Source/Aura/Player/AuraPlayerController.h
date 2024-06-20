@@ -59,7 +59,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
-
+	
 	TWeakInterfacePtr<IEnemyInterface> LastActor;
 	TWeakInterfacePtr<IEnemyInterface> ThisActor;
 
@@ -77,4 +77,5 @@ private:
 	void AbilityInputTagHeld(FGameplayTag InputTag);
 
 	UAuraAbilitySystemComponent* GetASC() const;
+	void AutoRun();
 };
