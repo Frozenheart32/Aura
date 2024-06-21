@@ -27,4 +27,5 @@ public:
 protected:
 
 	virtual void Activate() override;
+	void SendMouseCursorData();
 };
