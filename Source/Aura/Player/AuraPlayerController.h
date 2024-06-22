@@ -59,6 +59,9 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Input")
 	TObjectPtr<UInputAction> MoveAction;
+	UPROPERTY(EditAnywhere, Category = "Input")
+	TObjectPtr<UInputAction> ShiftAction;
+	bool bShiftKeyDown = false;
 	
 	TWeakInterfacePtr<IEnemyInterface> LastActor;
 	TWeakInterfacePtr<IEnemyInterface> ThisActor;
@@ -66,6 +69,10 @@ private:
 
 	UFUNCTION()
 	void Move(const FInputActionValue& InputActionValue);
+	UFUNCTION()
+	void ShiftPressed() { bShiftKeyDown = true; }
+	UFUNCTION()
+	void ShiftReleased() { bShiftKeyDown = false; }
 
 	UFUNCTION()
 	void CursorTrace();
