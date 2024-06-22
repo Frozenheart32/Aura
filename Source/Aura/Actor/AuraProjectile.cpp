@@ -3,6 +3,7 @@
 
 #include "Actor/AuraProjectile.h"
 
+#include "Aura.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
@@ -17,14 +18,16 @@ AAuraProjectile::AAuraProjectile()
 
 	Sphere = CreateDefaultSubobject<USphereComponent>("Sphere");
 	SetRootComponent(Sphere);
-	
-	Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
-	Sphere->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
-	Sphere->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
-	Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 
-	MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComponent");
+    Sphere->SetCollisionObjectType(ECC_Projectile);
+    Sphere->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	
+    Sphere->SetCollisionResponseToAllChannels(ECR_Ignore);
+    Sphere->SetCollisionResponseToChannel(ECC_WorldDynamic, ECR_Overlap);
+    Sphere->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
+    Sphere->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
+
+    MovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>("MovementComponent");
 	MovementComponent->InitialSpeed = 550.f;
 	MovementComponent->MaxSpeed = 550.f;
 	MovementComponent->ProjectileGravityScale = 0.f;
@@ -47,7 +50,7 @@ void AAuraProjectile::BeginPlay()
 
 void AAuraProjectile::Destroyed()
 {
-	if(!bHit && !HasAuthority())
+	if(bHit && !HasAuthority())
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect,GetActorLocation());
