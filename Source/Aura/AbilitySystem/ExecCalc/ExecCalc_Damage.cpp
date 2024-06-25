@@ -10,11 +10,13 @@
 struct AuraDamageStatics
 {
 	DECLARE_ATTRIBUTE_CAPTUREDEF(Armor);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(ArmorPenetration);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(BlockChance);
 	
 	AuraDamageStatics()
 	{
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, Armor, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, ArmorPenetration, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UAuraAttributeSet, BlockChance, Target, false);
 	}
 };
@@ -28,6 +30,7 @@ static const AuraDamageStatics& DamageStatics()
 UExecCalc_Damage::UExecCalc_Damage()
 {
 	RelevantAttributesToCapture.Add(DamageStatics().ArmorDef);
+	RelevantAttributesToCapture.Add(DamageStatics().ArmorPenetrationDef);
 	RelevantAttributesToCapture.Add(DamageStatics().BlockChanceDef);
 }
 
@@ -55,16 +58,30 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	
 
 	// Capture BlockChance on Target, and determine was a successful block
-	// if block, half the damage
 	float TargetBlockChance = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluateParameters, TargetBlockChance);
 	TargetBlockChance = FMath::Max(0.f, TargetBlockChance);
 
+	// if block, half the damage
 	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
 	if(bBlocked)
 	{
 		Damage /= 2.f;
 	}
+
+	// Armor
+	float TargetArmor = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluateParameters, TargetArmor);
+	TargetArmor = FMath::Max(0.f, TargetArmor);
+	// ArmorPenetration ignores a percentage of the target armor
+	float SourceArmorPenetration = 0.f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluateParameters, SourceArmorPenetration);
+	SourceArmorPenetration = FMath::Max(0.f, SourceArmorPenetration);
+
+	//Armor ignores percentage of damage
+	const float EffectiveArmor = TargetArmor *= (100.f - SourceArmorPenetration * 0.25f) / 100.f;
+	Damage *= (100.f - EffectiveArmor * 0.3f) / 100.f;
+	
 
 	const FGameplayModifierEvaluatedData EvaluatedData{UAuraAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Additive, Damage};
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
