@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class UDamageTextComponent;
 class USplineComponent;
 class UAuraInputConfig;
 struct FInputActionValue;
@@ -34,7 +35,16 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 
+
+public:
+
+	UFUNCTION(Client, Reliable)
+	void ShowDamageNumber(float DamageAmount, ACharacter* TargetCharacter);
+
 private:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Floating Text")
+	TSubclassOf<UDamageTextComponent> DamageTextComponentClass;
 
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;

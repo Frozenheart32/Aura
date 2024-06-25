@@ -11,8 +11,10 @@
 #include "NavigationSystem.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Components/SplineComponent.h"
+#include "GameFramework/Character.h"
 #include "Input/AuraInputComponent.h"
 #include "Interaction/EnemyInterface.h"
+#include "UI/Widgets/DamageTextComponent.h"
 
 AAuraPlayerController::AAuraPlayerController()
 {
@@ -79,6 +81,18 @@ void AAuraPlayerController::SetupInputComponent()
 	AuraInput->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ThisClass::ShiftReleased);
 	
 	AuraInput->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
+}
+
+void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter)
+{
+	if(!IsValid(TargetCharacter) || !IsValid(DamageTextComponentClass)) return;
+
+	const auto DamageText = NewObject<UDamageTextComponent>(TargetCharacter, DamageTextComponentClass);
+	DamageText->RegisterComponent();
+	DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+	DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+	
+	DamageText->SetDamageText(DamageAmount);
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
