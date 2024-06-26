@@ -75,6 +75,24 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName{"Attributes.Secondary.MaxMana"},
 		FString{"Maximum amount of Mana obtainable"});
 
+	/*
+	 * Resistances
+	 */
+	GameplayTags.Attributes_Resistance_Fire = TagManager.AddNativeGameplayTag(
+		FName{"Attributes.Resistance.Fire"},
+		FString{"Amount of Fire resistance"});
+
+	GameplayTags.Attributes_Resistance_Lightning = TagManager.AddNativeGameplayTag(
+		FName{"Attributes.Resistance.Lightning"},
+		FString{"Amount of Lightning resistance"});
+
+	GameplayTags.Attributes_Resistance_Arcane = TagManager.AddNativeGameplayTag(
+		FName{"Attributes.Resistance.Arcane"},
+		FString{"Amount of Arcane resistance"});
+
+	GameplayTags.Attributes_Resistance_Physical = TagManager.AddNativeGameplayTag(
+		FName{"Attributes.Resistance.Physical"},
+		FString{"Amount of Physical resistance"});
 
 	/*
 	 * Input Tags
@@ -116,8 +134,24 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName{"Damage.Fire"},
 		FString{"Fire Damage Type"});
 
+	GameplayTags.Damage_Lightning = TagManager.AddNativeGameplayTag(
+		FName{"Damage.Lightning"},
+		FString{"Lightning Damage Type"});
 
-	GameplayTags.DamageTypes.Add(GameplayTags.Damage_Fire);
+	GameplayTags.Damage_Arcane = TagManager.AddNativeGameplayTag(
+		FName{"Damage.Arcane"},
+		FString{"Arcane Damage Type"});
+
+	GameplayTags.Damage_Physical = TagManager.AddNativeGameplayTag(
+		FName{"Damage.Physical"},
+		FString{"Physical Damage Type"});
+
+
+	//Bind damage types and resistances
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Fire, GameplayTags.Attributes_Resistance_Fire);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Lightning, GameplayTags.Attributes_Resistance_Lightning);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Arcane, GameplayTags.Attributes_Resistance_Arcane);
+	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Physical, GameplayTags.Attributes_Resistance_Physical);
 	
 	/*
 	 * Effects
