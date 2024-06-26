@@ -83,16 +83,16 @@ void AAuraPlayerController::SetupInputComponent()
 	AuraInput->BindAbilityActions(InputConfig, this, &ThisClass::AbilityInputTagPressed, &ThisClass::AbilityInputTagReleased, &ThisClass::AbilityInputTagHeld);
 }
 
-void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter)
+void AAuraPlayerController::ShowDamageNumber_Implementation(float DamageAmount, ACharacter* TargetCharacter,  bool bBlockedHit, bool bCriticalHit)
 {
-	if(!IsValid(TargetCharacter) || !IsValid(DamageTextComponentClass)) return;
+	if(!IsValid(TargetCharacter) || !IsValid(DamageTextComponentClass) || !IsLocalController()) return;
 
 	const auto DamageText = NewObject<UDamageTextComponent>(TargetCharacter, DamageTextComponentClass);
 	DamageText->RegisterComponent();
 	DamageText->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 	DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
 	
-	DamageText->SetDamageText(DamageAmount);
+	DamageText->SetDamageText(DamageAmount, bBlockedHit, bCriticalHit);
 }
 
 void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
