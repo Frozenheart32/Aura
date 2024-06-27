@@ -14,7 +14,7 @@ public class Aura : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
-			"Niagara",
+			"Niagara", "AIModule",
 		});
 
 		PublicIncludePaths.AddRange(
