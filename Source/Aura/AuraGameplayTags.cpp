@@ -152,6 +152,13 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Lightning, GameplayTags.Attributes_Resistance_Lightning);
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Arcane, GameplayTags.Attributes_Resistance_Arcane);
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Physical, GameplayTags.Attributes_Resistance_Physical);
+
+
+	
+	GameplayTags.Abilities_Attack = TagManager.AddNativeGameplayTag(
+		FName{"Abilities.Attack"},
+		FString{"Attack Ability Tag"});
+
 	
 	/*
 	 * Effects
