@@ -32,6 +32,10 @@ protected:
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	FName WeaponTipSocketName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	FName LeftHandTipSocketName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	FName RightHandTipSocketName;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
@@ -76,7 +80,7 @@ public:
 	/*
 	 * Combat Interface
 	 */
-	virtual FVector GetCombatSocketLocation_Implementation() override;
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual void Die() override;
 	virtual bool IsDead_Implementation() const override;
