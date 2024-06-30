@@ -36,6 +36,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TArray<FTaggedMontage> AttackMontages;
+
 	/*
 	 * Dissolve Effects
 	 */
@@ -78,6 +81,7 @@ public:
 	virtual void Die() override;
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 
 protected:
 

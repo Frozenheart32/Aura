@@ -70,9 +70,6 @@ public:
 	FGameplayTag Montage_Attack_LeftHand;
 
 	FGameplayTag Effects_HitReact;
-	
-protected:
-
 
 private:
 
