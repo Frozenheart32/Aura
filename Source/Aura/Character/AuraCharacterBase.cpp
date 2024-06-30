@@ -139,14 +139,14 @@ void AAuraCharacterBase::AddCharacterAbilities()
 
 void AAuraCharacterBase::Dissolve()
 {
-	if(IsValid(DissolveCharacterMaterialInstance))
+	if(IsValid(DissolveCharacterMaterialInstance) && IsValid(GetMesh()))
 	{
 		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveCharacterMaterialInstance, this);
 		GetMesh()->SetMaterial(0, DynamicMatInst);
 		StartDissolveTimeline(DynamicMatInst);
 	}
 
-	if(IsValid(DissolveWeaponMaterialInstance))
+	if(IsValid(DissolveWeaponMaterialInstance) && IsValid(Weapon))
 	{
 		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveWeaponMaterialInstance, this);
 		Weapon->SetMaterial(0, DynamicMatInst);
