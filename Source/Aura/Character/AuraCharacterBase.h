@@ -32,9 +32,16 @@ protected:
 	TObjectPtr<USkeletalMeshComponent> Weapon;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	FName WeaponTipSocketName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	FName LeftHandTipSocketName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	FName RightHandTipSocketName;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TArray<FTaggedMontage> AttackMontages;
 
 	/*
 	 * Dissolve Effects
@@ -57,6 +64,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
+	
+	bool bDead = false;
 
 private:
 
@@ -67,10 +76,16 @@ public:
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const;
-
-	virtual FVector GetCombatSocketLocation() const override;
+	
+	/*
+	 * Combat Interface
+	 */
+	virtual FVector GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag) override;
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual void Die() override;
+	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;
+	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
 
 protected:
 

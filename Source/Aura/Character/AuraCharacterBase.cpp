@@ -5,6 +5,7 @@
 
 #include "AbilitySystemComponent.h"
 #include "Aura.h"
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 
@@ -43,10 +44,25 @@ UAttributeSet* AAuraCharacterBase::GetAttributeSet() const
 	return AttributeSet;
 }
 
-FVector AAuraCharacterBase::GetCombatSocketLocation() const
+FVector AAuraCharacterBase::GetCombatSocketLocation_Implementation(const FGameplayTag& MontageTag)
 {
-	check(Weapon);
-	return Weapon->GetSocketLocation(WeaponTipSocketName);
+	const auto& AuraTags = FAuraGameplayTags::Get();
+	if(MontageTag.MatchesTagExact(AuraTags.Montage_Attack_Weapon) && IsValid(Weapon))
+	{
+		return Weapon->GetSocketLocation(WeaponTipSocketName);
+	}
+
+	if(MontageTag.MatchesTagExact(AuraTags.Montage_Attack_LeftHand))
+	{
+		return GetMesh()->GetSocketLocation(LeftHandTipSocketName);
+	}
+
+	if(MontageTag.MatchesTagExact(AuraTags.Montage_Attack_RightHand))
+	{
+		return GetMesh()->GetSocketLocation(RightHandTipSocketName);
+	}
+
+	return FVector{};
 }
 
 UAnimMontage* AAuraCharacterBase::GetHitReactMontage_Implementation()
@@ -60,6 +76,21 @@ void AAuraCharacterBase::Die()
 	
 	Weapon->DetachFromComponent(FDetachmentTransformRules{EDetachmentRule::KeepWorld, true});
 	MulticastHandleDeath();
+}
+
+bool AAuraCharacterBase::IsDead_Implementation() const
+{
+	return bDead;
+}
+
+AActor* AAuraCharacterBase::GetAvatar_Implementation()
+{
+	return this;
+}
+
+TArray<FTaggedMontage> AAuraCharacterBase::GetAttackMontages_Implementation()
+{
+	return AttackMontages;
 }
 
 void AAuraCharacterBase::MulticastHandleDeath_Implementation()
@@ -76,6 +107,8 @@ void AAuraCharacterBase::MulticastHandleDeath_Implementation()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Dissolve();
+	
+	bDead = true;
 }
 
 void AAuraCharacterBase::InitAbilityActorInfo()
@@ -106,14 +139,14 @@ void AAuraCharacterBase::AddCharacterAbilities()
 
 void AAuraCharacterBase::Dissolve()
 {
-	if(IsValid(DissolveCharacterMaterialInstance))
+	if(IsValid(DissolveCharacterMaterialInstance) && IsValid(GetMesh()))
 	{
 		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveCharacterMaterialInstance, this);
 		GetMesh()->SetMaterial(0, DynamicMatInst);
 		StartDissolveTimeline(DynamicMatInst);
 	}
 
-	if(IsValid(DissolveWeaponMaterialInstance))
+	if(IsValid(DissolveWeaponMaterialInstance) && IsValid(Weapon))
 	{
 		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveWeaponMaterialInstance, this);
 		Weapon->SetMaterial(0, DynamicMatInst);
