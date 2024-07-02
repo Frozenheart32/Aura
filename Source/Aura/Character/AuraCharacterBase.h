@@ -14,6 +14,7 @@ class UGameplayEffect;
 class UAttributeSet;
 class UAbilitySystemComponent;
 class UAnimMontage;
+class USoundBase;
 
 
 UCLASS(Abstract)
@@ -54,6 +55,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
 	TObjectPtr<UNiagaraSystem> BloodEffect;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Effects")
+	TObjectPtr<USoundBase> DeathSound;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
