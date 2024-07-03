@@ -38,6 +38,8 @@ protected:
 	FName LeftHandTipSocketName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	FName RightHandTipSocketName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	FName TailTipSocketName = FName{"TailSocket"};
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
