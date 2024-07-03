@@ -43,9 +43,6 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		if(const auto SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo()))
 		{
 			check(DamageEffectClass);
-			
-			const auto& Tags = FAuraGameplayTags::Get();
-
 			FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
 			EffectContextHandle.SetAbility(this);
 			EffectContextHandle.AddSourceObject(SpawnedProjectile);
