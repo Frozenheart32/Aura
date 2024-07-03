@@ -6,6 +6,7 @@
 #include "AuraDamageGameplayAbility.h"
 #include "AuraProjectileSpell.generated.h"
 
+struct FGameplayTag;
 class AAuraProjectile;
 class UGameplayEffect;
 
@@ -25,5 +26,5 @@ protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Projectile", meta=(BlueprintProtected))
-	void SpawnProjectile(const FVector& ProjectileTargetLocation);
+	void SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag);
 };
