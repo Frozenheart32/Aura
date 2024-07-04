@@ -8,11 +8,13 @@
 #include "Interaction/CombatInterface.h"
 #include "AuraCharacterBase.generated.h"
 
+class UNiagaraSystem;
 class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
 class UAbilitySystemComponent;
 class UAnimMontage;
+class USoundBase;
 
 
 UCLASS(Abstract)
@@ -36,6 +38,8 @@ protected:
 	FName LeftHandTipSocketName;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	FName RightHandTipSocketName;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	FName TailTipSocketName = FName{"TailSocket"};
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
@@ -50,6 +54,11 @@ protected:
 	TObjectPtr<UMaterialInstance> DissolveCharacterMaterialInstance;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Dissolve")
 	TObjectPtr<UMaterialInstance> DissolveWeaponMaterialInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<UNiagaraSystem> BloodEffect;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	TObjectPtr<USoundBase> DeathSound;
 
 	UPROPERTY()
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
@@ -66,6 +75,12 @@ protected:
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 	
 	bool bDead = false;
+
+	/*
+	 * Minions
+	 */
+	
+	int32 MinionCount = 0;
 
 private:
 
@@ -86,6 +101,10 @@ public:
 	virtual bool IsDead_Implementation() const override;
 	virtual AActor* GetAvatar_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontages_Implementation() override;
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
+	virtual FTaggedMontage GetTaggedMontageByTag_Implementation(const FGameplayTag& MontageTag) override;
+	virtual int32 GetMinionCount_Implementation() override;
+	virtual void IncrementMinionCount_Implementation(int32 Amount) override;
 
 protected:
 

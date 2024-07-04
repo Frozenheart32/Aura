@@ -5,7 +5,6 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "AuraGameplayTags.h"
 #include "Actor/AuraProjectile.h"
 #include "Interaction/CombatInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -19,15 +18,18 @@ void UAuraProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Hand
 	
 }
 
-void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation)
+void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocation, const FGameplayTag& SocketTag, bool bOverridePitch, float PitchOverride)
 {
 	if(!GetAvatarActorFromActorInfo()->HasAuthority()) return;
 
 	if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(GetAvatarActorFromActorInfo()))
 	{
-		const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(),
-			FAuraGameplayTags::Get().Montage_Attack_Weapon);
-		const FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		const FVector SocketLocation = ICombatInterface::Execute_GetCombatSocketLocation(GetAvatarActorFromActorInfo(), SocketTag);
+		FRotator Rotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+		if(bOverridePitch)
+		{
+			Rotation.Pitch = PitchOverride;
+		}
 		
 		FTransform SpawnTransform;
 		SpawnTransform.SetLocation(SocketLocation);
@@ -44,9 +46,6 @@ void UAuraProjectileSpell::SpawnProjectile(const FVector& ProjectileTargetLocati
 		if(const auto SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo()))
 		{
 			check(DamageEffectClass);
-			
-			const auto& Tags = FAuraGameplayTags::Get();
-
 			FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
 			EffectContextHandle.SetAbility(this);
 			EffectContextHandle.AddSourceObject(SpawnedProjectile);
