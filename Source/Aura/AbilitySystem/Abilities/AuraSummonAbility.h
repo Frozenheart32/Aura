@@ -34,5 +34,5 @@ protected:
 public:
 
 	UFUNCTION(BlueprintCallable)
-	TArray<FVector> GetSpawnLocations() const; 	
+	TArray<FVector> GetSpawnLocations(bool bIsDebug = false) const; 	
 };

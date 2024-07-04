@@ -5,7 +5,7 @@
 
 #include "Kismet/KismetSystemLibrary.h"
 
-TArray<FVector> UAuraSummonAbility::GetSpawnLocations() const
+TArray<FVector> UAuraSummonAbility::GetSpawnLocations(bool bIsDebug) const
 {
 	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
 	const FVector Location = GetAvatarActorFromActorInfo()->GetActorLocation();
@@ -19,13 +19,24 @@ TArray<FVector> UAuraSummonAbility::GetSpawnLocations() const
 		UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(),
 		                                     Location, Location + Direction * MaxSpawnDistance, 4.f, FLinearColor::Green, 4.f);
 		                                     
-		const FVector ChosenSpawnLocation = Location + Direction * FMath::RandRange(MinSpawnDistance, MaxSpawnDistance);
-		DrawDebugSphere(GetWorld(), ChosenSpawnLocation, 5.f, 12, FColor::Cyan, false,3.f);
-		  
-		
-		DrawDebugSphere(GetWorld(), Location + Direction * MinSpawnDistance, 5.f, 12, FColor::Red, false,3.f);
-		DrawDebugSphere(GetWorld(), Location + Direction * MaxSpawnDistance, 5.f, 12, FColor::Red, false,3.f);
+		FVector ChosenSpawnLocation = Location + Direction * FMath::RandRange(MinSpawnDistance, MaxSpawnDistance);
 
+		FHitResult Hit;
+		GetWorld()->LineTraceSingleByChannel(Hit, ChosenSpawnLocation + FVector{0.f, 0.f, 400}, ChosenSpawnLocation + FVector{0.f, 0.f, -400.f}, ECC_Visibility);
+
+
+		if(Hit.bBlockingHit)
+		{
+			ChosenSpawnLocation = Hit.ImpactPoint;
+		}
+		
+		if(bIsDebug)
+		{
+			DrawDebugSphere(GetWorld(), ChosenSpawnLocation, 5.f, 12, FColor::Cyan, false,3.f);
+			DrawDebugSphere(GetWorld(), Location + Direction * MinSpawnDistance, 5.f, 12, FColor::Red, false,3.f);
+			DrawDebugSphere(GetWorld(), Location + Direction * MaxSpawnDistance, 5.f, 12, FColor::Red, false,3.f);
+		}
+		
 		SpawnLocations.Add(ChosenSpawnLocation);
 	}
 	
