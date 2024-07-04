@@ -34,5 +34,8 @@ protected:
 public:
 
 	UFUNCTION(BlueprintCallable)
-	TArray<FVector> GetSpawnLocations(bool bIsDebug = false) const; 	
+	TArray<FVector> GetSpawnLocations(bool bIsDebug = false) const;
+
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<APawn> GetRandomMinionSubclass() const;
 };
