@@ -9,6 +9,7 @@
 
 class UAbilityInfo;
 class UAuraMessageWidget;
+class UAuraAbilitySystemComponent;
 
 USTRUCT(BlueprintType)
 struct FUIWidgetRow : public FTableRowBase
@@ -72,6 +73,8 @@ private:
 
 	template<class T>
 	const T* GetDataTableRowByTag(const UDataTable* DataTable, const FGameplayTag& Tag) const;
+
+	void OnInitializeStartupAbilities(UAuraAbilitySystemComponent* AuraASC);
 };
 
 template <class T>
