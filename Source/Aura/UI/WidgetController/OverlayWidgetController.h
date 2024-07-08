@@ -7,6 +7,7 @@
 #include "Engine/DataTable.h"
 #include "OverlayWidgetController.generated.h"
 
+class UAbilityInfo;
 class UAuraMessageWidget;
 
 USTRUCT(BlueprintType)
@@ -56,8 +57,11 @@ public:
 
 protected:
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widget Data")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	TObjectPtr<UAbilityInfo> AbilityInfo;
 
 public:
 
