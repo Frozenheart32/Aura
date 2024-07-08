@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
 
 void UOverlayWidgetController::BroadcastInitialValues()
 {
@@ -46,16 +47,43 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 		});
 
 	
-	Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags
-		.AddLambda([this](const FGameplayTagContainer& AssetTags)
-		{
-			const FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag("Message");
-			for(const FGameplayTag& Tag : AssetTags)
-			{
-				if(!Tag.MatchesTag(MessageTag)) continue;
+	const auto AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	if(AuraASC->bStartupAbilitiesGiven)
+	{
+		OnInitializeStartupAbilities(AuraASC);
+	}
+	else
+	{
+		AuraASC->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
+	}
+	
+	AuraASC->EffectAssetTags
+	       .AddLambda([this](const FGameplayTagContainer& AssetTags)
+	       {
+		       const FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag("Message");
+		       for(const FGameplayTag& Tag : AssetTags)
+		       {
+			       if(!Tag.MatchesTag(MessageTag)) continue;
 				
-				const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
-				MessageWidgetRowDelegate.Broadcast(*Row);
-			}
-		});
+			       const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+			       MessageWidgetRowDelegate.Broadcast(*Row);
+		       }
+	       });
+}
+
+void UOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemComponent* AuraASC)
+{
+	//TODO: Get information about all given abilities, took up their ability info and broadcast it to widgets
+	if(!AuraASC->bStartupAbilitiesGiven) return;
+
+	FForEachAbility BroadcastDelegate{};
+	BroadcastDelegate.BindLambda([this, AuraASC](const FGameplayAbilitySpec& AbilitySpec)
+	{
+		FAuraAbilityInfo AuraAbilityInfo = AbilityInfo->FindAbilityInfoByTag(
+			AuraASC->GetAbilityTagFromSpec(AbilitySpec));
+		AuraAbilityInfo.InputTag = AuraASC->GetInputTagForSpec(AbilitySpec);
+		AbilityInfoDelegate.Broadcast(AuraAbilityInfo);
+	});
+
+	AuraASC->ForEachAbility(BroadcastDelegate);
 }
