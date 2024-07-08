@@ -43,4 +43,6 @@ protected:
 
 	UFUNCTION(Client, Reliable)
 	void EffectApplied_OnClient(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle EffectHandle);
+
+	virtual void OnRep_ActivateAbilities() override;
 };

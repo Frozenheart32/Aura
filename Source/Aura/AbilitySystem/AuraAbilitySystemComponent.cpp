@@ -105,6 +105,17 @@ FGameplayTag UAuraAbilitySystemComponent::GetInputTagForSpec(const FGameplayAbil
 	return FGameplayTag{};
 }
 
+void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
+
+	if(!bStartupAbilitiesGiven)
+	{
+		bStartupAbilitiesGiven = true;
+		AbilitiesGivenDelegate.Broadcast(this);
+	}
+}
+
 void UAuraAbilitySystemComponent::EffectApplied_OnClient_Implementation(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
                                                                         FActiveGameplayEffectHandle EffectHandle)
 {
