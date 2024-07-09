@@ -9,6 +9,7 @@
 
 class UAbilitySystemComponent;
 class UAttributeSet;
+class ULevelUpInfo;
 
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChanged, int32 /*Stat Value*/)
@@ -27,6 +28,9 @@ public:
 
 	FOnPlayerStatChanged OnXPChanged;
 	FOnPlayerStatChanged OnLevelChanged;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
+	TObjectPtr<ULevelUpInfo> LevelUpInfo;
 
 protected:
 	

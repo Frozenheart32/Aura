@@ -34,6 +34,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangeSignature, float, 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature, const FUIWidgetRow&, MessageData);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
 
+
 /**
  * 
  */
@@ -60,12 +61,15 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|AbilityInfo")
 	FAbilityInfoSignature AbilityInfoDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category = "GAS|XP")
+	FOnAttributeChangeSignature OnXPPercentChanged;
+
 protected:
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Widget Data")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
 	TObjectPtr<UAbilityInfo> AbilityInfo;
 
 public:
@@ -74,6 +78,9 @@ public:
 	virtual void BindCallbacksToDependencies() override;
 
 private:
+
+	UFUNCTION()
+	void OnXPChanged(int32 NewXP) const;
 
 	template<class T>
 	const T* GetDataTableRowByTag(const UDataTable* DataTable, const FGameplayTag& Tag) const;
