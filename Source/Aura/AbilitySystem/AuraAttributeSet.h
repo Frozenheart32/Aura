@@ -171,6 +171,8 @@ public:
 
 private:
 
+	void SendXPEvent(const FEffectProperties& Props);
+
 	UFUNCTION()
 	void OnRep_Strength(const FGameplayAttributeData& OldStrength) const;
 	UFUNCTION()
