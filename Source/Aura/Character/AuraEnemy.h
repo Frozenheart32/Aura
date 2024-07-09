@@ -66,13 +66,13 @@ public:
 	virtual AActor* GetCombatTarget_Implementation() const override;
 
 	/* Combat Interface */
-	virtual int32 GetPlayerLevel() const override;
+	virtual int32 GetPlayerLevel_Implementation();
 	virtual void Die() override;
 
 protected:
 
 	virtual void InitAbilityActorInfo() override;
-	virtual void InitializeDefaultAttributes() const override;
+	virtual void InitializeDefaultAttributes() override;
 
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 };

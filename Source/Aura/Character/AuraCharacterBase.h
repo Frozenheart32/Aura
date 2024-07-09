@@ -119,7 +119,7 @@ protected:
 
 	virtual void InitAbilityActorInfo();
 
-	virtual void InitializeDefaultAttributes() const;
+	virtual void InitializeDefaultAttributes();
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> GameplayEffectClass, float Level) const;
 
 	void AddCharacterAbilities();

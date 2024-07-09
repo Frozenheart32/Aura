@@ -196,9 +196,9 @@ void AAuraCharacterBase::Dissolve()
 	}
 }
 
-void AAuraCharacterBase::InitializeDefaultAttributes() const
+void AAuraCharacterBase::InitializeDefaultAttributes()
 {
-	ApplyEffectToSelf(DefaultPrimaryAttributes, GetPlayerLevel());
-	ApplyEffectToSelf(DefaultSecondaryAttributes, GetPlayerLevel());
-	ApplyEffectToSelf(DefaultVitalAttributes, GetPlayerLevel());
+	ApplyEffectToSelf(DefaultPrimaryAttributes, 1);
+	ApplyEffectToSelf(DefaultSecondaryAttributes, 1);
+	ApplyEffectToSelf(DefaultVitalAttributes, 1);
 }

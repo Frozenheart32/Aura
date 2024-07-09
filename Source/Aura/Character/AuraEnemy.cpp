@@ -111,7 +111,7 @@ AActor* AAuraEnemy::GetCombatTarget_Implementation() const
 	return CombatTarget;
 }
 
-int32 AAuraEnemy::GetPlayerLevel() const
+int32 AAuraEnemy::GetPlayerLevel_Implementation()
 {
 	return Level;
 }
@@ -135,7 +135,7 @@ void AAuraEnemy::InitAbilityActorInfo()
 		InitializeDefaultAttributes();
 }
 
-void AAuraEnemy::InitializeDefaultAttributes() const
+void AAuraEnemy::InitializeDefaultAttributes()
 {
 	UAuraAbilitySystemLibrary::InitializeDefaultAttributes(this, AbilitySystemComponent, CharacterClass, Level);
 }
