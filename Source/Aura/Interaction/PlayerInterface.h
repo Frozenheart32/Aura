@@ -7,7 +7,7 @@
 #include "PlayerInterface.generated.h"
 
 // This class does not need to be modified.
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI, BlueprintType)
 class UPlayerInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -24,7 +24,28 @@ class AURA_API IPlayerInterface
 public:
 
 	UFUNCTION(BlueprintNativeEvent)
+	int32 FindLevelForXP(int32 InXP);
+
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetXP();
+
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetAttributePointsReward(int32 Level);
+
+	UFUNCTION(BlueprintNativeEvent)
+	int32 GetSpellPointsReward(int32 Level);
+
+	UFUNCTION(BlueprintNativeEvent)
 	void AddToXP(int32 InXP);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void AddToPlayerLevel(int32 InPlayerLevel);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void AddToAttributePoints(int32 InAttributePointsCount);
+
+	UFUNCTION(BlueprintNativeEvent)
+	void AddToSpellPoints(int32 InSpellPointsCount);
 
 	UFUNCTION(BlueprintNativeEvent)
 	void LevelUp();
