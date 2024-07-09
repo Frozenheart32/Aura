@@ -49,6 +49,13 @@ int32 AAuraCharacter::GetPlayerLevel() const
 	return AuraPlayerState->GetPlayerLevel();
 }
 
+void AAuraCharacter::AddToXP_Implementation(int32 InXP)
+{
+	const auto AuraPlayerState = GetPlayerState<AAuraPlayerState>();
+	check(AuraPlayerState);
+	AuraPlayerState->AddToXP(InXP);
+}
+
 void AAuraCharacter::InitAbilityActorInfo()
 {
 	const auto AuraPlayerState = GetPlayerState<AAuraPlayerState>();
