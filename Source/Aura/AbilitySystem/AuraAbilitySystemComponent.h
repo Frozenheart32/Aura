@@ -40,6 +40,11 @@ public:
 	FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec) const;
 	FGameplayTag GetInputTagForSpec(const FGameplayAbilitySpec& AbilitySpec) const;
 
+	void UpgradeAttribute(const FGameplayTag& AttributeTag);
+
+	UFUNCTION(Server, Reliable)
+	void UpgradeAttribute_OnServer(FGameplayTag AttributeTag);
+
 protected:
 
 	UFUNCTION(Client, Reliable)
