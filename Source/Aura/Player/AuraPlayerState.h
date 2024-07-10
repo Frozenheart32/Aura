@@ -28,6 +28,8 @@ public:
 
 	FOnPlayerStatChanged OnXPChanged;
 	FOnPlayerStatChanged OnLevelChanged;
+	FOnPlayerStatChanged OnAttributePointsChanged;
+	FOnPlayerStatChanged OnSpellPointsChanged;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
 	TObjectPtr<ULevelUpInfo> LevelUpInfo;
@@ -45,6 +47,12 @@ protected:
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = "OnRep_XP")
 	int32 XP = 0;
 
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = "OnRep_AttributePoints")
+	int32 AttributePoints = 0;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = "OnRep_SpellPoints")
+	int32 SpellPoints = 0;
+
 public:
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
@@ -53,7 +61,12 @@ public:
 	
 	FORCEINLINE int32 GetPlayerLevel() const { return Level; }
 	FORCEINLINE int32 GetXP() const { return XP; }
+	FORCEINLINE int32 GetAttributePoints() const { return AttributePoints; }
+	FORCEINLINE int32 GetSpellPoints() const { return SpellPoints; }
 
+	void AddToAttributePoints(int32 InPoints);
+	void AddToSpellPoints(int32 InPoints);
+	
 	void AddToXP(int32 InXP);
 	void SetXP(int32 InXP);
 
@@ -66,4 +79,9 @@ private:
 	void OnRep_Level(int32 OldLevel) const;
 	UFUNCTION()
 	void OnRep_XP(int32 OldXP) const;
+
+	UFUNCTION()
+	void OnRep_AttributePoints(int32 OldPoints) const;
+	UFUNCTION()
+	void OnRep_SpellPoints(int32 OldPoints) const;
 };

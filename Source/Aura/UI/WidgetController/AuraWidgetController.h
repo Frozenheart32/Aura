@@ -38,6 +38,9 @@ struct FWidgetControllerParams
 	
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChangeSignature, int32, NewValue);
+
+
 /**
  * 
  */
