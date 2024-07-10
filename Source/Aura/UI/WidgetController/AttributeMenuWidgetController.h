@@ -8,6 +8,8 @@
 
 class UAttributeInfo;
 struct FAuraAttributeInfo;
+struct FGameplayTag;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAttributeInfoSignature, const FAuraAttributeInfo&, Info);
 
 /**
@@ -23,8 +25,16 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "GAS|Attributes")
 	FAttributeInfoSignature AttributeDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Points")
+	FOnPlayerStatChangeSignature AttributePointsChangedDelegate;
+	UPROPERTY(BlueprintAssignable, Category = "GAS|Points")
+	FOnPlayerStatChangeSignature SpellPointsChangedDelegate;
+
 	virtual void BindCallbacksToDependencies() override;
 	virtual void BroadcastInitialValues() override;
+
+	UFUNCTION(BlueprintCallable)
+	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 
 protected:
 
@@ -35,4 +45,5 @@ protected:
 private:
 
 	void BroadcastAttributeInfo(const FGameplayTag& AttributeTag, const FGameplayAttribute& Attribute) const;
+	
 };
