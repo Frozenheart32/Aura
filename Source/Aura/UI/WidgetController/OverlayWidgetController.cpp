@@ -12,12 +12,16 @@
 void UOverlayWidgetController::BroadcastInitialValues()
 {
 	const auto AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
+	const auto AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
 	
 	OnHealthChanged.Broadcast(AuraAttributeSet->GetHealth());
 	OnMaxHealthChanged.Broadcast(AuraAttributeSet->GetMaxHealth());
 
 	OnManaChanged.Broadcast(AuraAttributeSet->GetMana());
 	OnMaxManaChanged.Broadcast(AuraAttributeSet->GetMaxMana());
+
+	OnXPPercentChanged.Broadcast(AuraPlayerState->GetXP());
+	//OnPlayerLevelChanged.Broadcast(AuraPlayerState->GetPlayerLevel());
 }
 
 void UOverlayWidgetController::BindCallbacksToDependencies()
@@ -30,10 +34,10 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	const auto AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
 
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute())
-	                      .AddLambda([this](const FOnAttributeChangeData& Data)
-	                      {
-		                      OnHealthChanged.Broadcast(Data.NewValue);
-	                      });
+	      .AddLambda([this](const FOnAttributeChangeData& Data)
+	      {
+	          OnHealthChanged.Broadcast(Data.NewValue);
+	      });
 	
 	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxHealthAttribute())
 		.AddLambda([this](const FOnAttributeChangeData& Data)
@@ -65,17 +69,17 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	}
 	
 	AuraASC->EffectAssetTags
-	       .AddLambda([this](const FGameplayTagContainer& AssetTags)
+	   .AddLambda([this](const FGameplayTagContainer& AssetTags)
+	   {
+	       const FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag("Message");
+	       for(const FGameplayTag& Tag : AssetTags)
 	       {
-		       const FGameplayTag MessageTag = FGameplayTag::RequestGameplayTag("Message");
-		       for(const FGameplayTag& Tag : AssetTags)
-		       {
-			       if(!Tag.MatchesTag(MessageTag)) continue;
-				
-			       const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
-			       MessageWidgetRowDelegate.Broadcast(*Row);
-		       }
-	       });
+		       if(!Tag.MatchesTag(MessageTag)) continue;
+			
+		       const FUIWidgetRow* Row = GetDataTableRowByTag<FUIWidgetRow>(MessageWidgetDataTable, Tag);
+		       MessageWidgetRowDelegate.Broadcast(*Row);
+	       }
+	   });
 }
 
 void UOverlayWidgetController::OnXPChanged(int32 NewXP) const
@@ -108,7 +112,6 @@ void UOverlayWidgetController::OnLevelChanged(int32 NewLevel) const
 
 void UOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemComponent* AuraASC)
 {
-	//TODO: Get information about all given abilities, took up their ability info and broadcast it to widgets
 	if(!AuraASC->bStartupAbilitiesGiven) return;
 
 	FForEachAbility BroadcastDelegate{};
