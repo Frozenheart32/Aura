@@ -30,7 +30,7 @@ void UAuraWidgetController::BindCallbacksToDependencies()
 void UAuraWidgetController::BroadcastAbilityInfo()
 {
 	const auto AuraASC = GetOwningASC();
-	if(!GetOwningASC()->bStartupAbilitiesGiven) return;
+	if(!AuraASC || !GetOwningASC()->bStartupAbilitiesGiven) return;
 
 	FForEachAbility BroadcastDelegate{};
 	BroadcastDelegate.BindLambda([this, AuraASC](const FGameplayAbilitySpec& AbilitySpec)
