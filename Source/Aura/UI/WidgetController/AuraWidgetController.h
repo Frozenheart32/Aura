@@ -8,8 +8,14 @@
 #include "UObject/NoExportTypes.h"
 #include "AuraWidgetController.generated.h"
 
+class UAuraAttributeSet;
+class UAuraAbilitySystemComponent;
+class AAuraPlayerState;
 class UAttributeSet;
 class UAbilitySystemComponent;
+struct FAuraAbilityInfo;
+class AAuraPlayerController;
+class UAbilityInfo;
 
 USTRUCT(BlueprintType)
 struct FWidgetControllerParams
@@ -39,7 +45,7 @@ struct FWidgetControllerParams
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnPlayerStatChangeSignature, int32, NewValue);
-
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FAuraAbilityInfo&, Info);
 
 /**
  * 
@@ -51,6 +57,8 @@ class AURA_API UAuraWidgetController : public UObject
 
 public:
 
+	UPROPERTY(BlueprintAssignable, Category = "GAS|AbilityInfo")
+	FAbilityInfoSignature AbilityInfoDelegate;
 	
 protected:
 	
@@ -64,6 +72,9 @@ protected:
 	UPROPERTY()
 	TWeakObjectPtr<UAttributeSet> AttributeSet;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Data")
+	TObjectPtr<UAbilityInfo> AbilityInfo;
+
 public:
 
 	UFUNCTION(BlueprintCallable)
@@ -71,16 +82,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void BroadcastInitialValues();
 	virtual void BindCallbacksToDependencies();
+	UFUNCTION()
+	void BroadcastAbilityInfo();
 
 	UFUNCTION(BlueprintCallable, Category = "WidgetController")
-	APlayerController* GetOwningPlayerController() const;
+	FORCEINLINE AAuraPlayerController* GetOwningPlayerController() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "WidgetController")
+	FORCEINLINE AAuraPlayerState* GetOwningPlayerState() const;
 
 	UFUNCTION(BlueprintCallable, Category = "WidgetController")
-	APlayerState* GetOwningPlayerState() const;
+	FORCEINLINE UAuraAbilitySystemComponent* GetOwningASC() const;
 
 	UFUNCTION(BlueprintCallable, Category = "WidgetController")
-	UAbilitySystemComponent* GetOwningASC() const;
-
-	UFUNCTION(BlueprintCallable, Category = "WidgetController")
-	UAttributeSet* GetOwningAttributeSet() const;
+	FORCEINLINE UAuraAttributeSet* GetOwningAttributeSet() const;
 };

@@ -10,7 +10,7 @@
 
 void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 {
-	UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
+	UAuraAttributeSet* AS = GetOwningAttributeSet();
 	for (const auto& [Tag, Attribute] : AS->TagsToAttributes)
 	{
 		AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(Attribute.Execute())
@@ -37,8 +37,8 @@ void UAttributeMenuWidgetController::BindCallbacksToDependencies()
 void UAttributeMenuWidgetController::BroadcastInitialValues()
 {
 	check(AttributeInfo);
-	const UAuraAttributeSet* AS = CastChecked<UAuraAttributeSet>(AttributeSet);
-	const auto AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	const UAuraAttributeSet* AS = GetOwningAttributeSet();
+	const auto AuraPlayerState = GetOwningPlayerState();
 
 	for (const auto& [Tag, Attribute] : AS->TagsToAttributes)
 	{
@@ -51,7 +51,7 @@ void UAttributeMenuWidgetController::BroadcastInitialValues()
 
 void UAttributeMenuWidgetController::UpgradeAttribute(const FGameplayTag& AttributeTag)
 {
-	const auto AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
+	const auto AuraASC = GetOwningASC();
 	AuraASC->UpgradeAttribute(AttributeTag);
 }
 
