@@ -30,6 +30,8 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 	const auto AuraAttributeSet = GetOwningAttributeSet();
 	const auto AuraASC = GetOwningASC();
 
+	check(AuraASC && AuraAttributeSet && AuraPlayerState);
+
 	AuraPlayerState->OnXPChanged.AddUObject(this, &UOverlayWidgetController::OnXPChanged);
 	AuraPlayerState->OnLevelChanged.AddUObject(this, &UOverlayWidgetController::OnLevelChanged);
 
@@ -85,6 +87,7 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 void UOverlayWidgetController::OnXPChanged(int32 NewXP) const
 {
 	const AAuraPlayerState* AuraPlayerState = GetOwningPlayerState();
+	check(AuraPlayerState);
 	const ULevelUpInfo* LevelUpInfo = AuraPlayerState->LevelUpInfo;
 	checkf(LevelUpInfo, TEXT("Unable to find LevelUpInfo. Please fill out AuraPlayerState Blueprint"));
 
