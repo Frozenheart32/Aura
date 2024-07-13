@@ -39,6 +39,7 @@ public:
 
 	FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec) const;
 	FGameplayTag GetInputTagForSpec(const FGameplayAbilitySpec& AbilitySpec) const;
+	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 
