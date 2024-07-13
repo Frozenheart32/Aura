@@ -35,10 +35,13 @@ void UAuraWidgetController::BroadcastAbilityInfo()
 	FForEachAbility BroadcastDelegate{};
 	BroadcastDelegate.BindLambda([this, AuraASC](const FGameplayAbilitySpec& AbilitySpec)
 	{
-		FAuraAbilityInfo AuraAbilityInfo = AbilityInfo->FindAbilityInfoByTag(
+		FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(
 			AuraASC->GetAbilityTagFromSpec(AbilitySpec));
-		AuraAbilityInfo.InputTag = AuraASC->GetInputTagForSpec(AbilitySpec);
-		AbilityInfoDelegate.Broadcast(AuraAbilityInfo);
+		
+		Info.InputTag = AuraASC->GetInputTagForSpec(AbilitySpec);
+		Info.StatusTag = UAuraAbilitySystemComponent::GetStatusFromSpec(AbilitySpec);
+		
+		AbilityInfoDelegate.Broadcast(Info);
 	});
 
 	AuraASC->ForEachAbility(BroadcastDelegate);
@@ -46,20 +49,20 @@ void UAuraWidgetController::BroadcastAbilityInfo()
 
 AAuraPlayerController* UAuraWidgetController::GetOwningPlayerController() const
 {
-	return CastChecked<AAuraPlayerController>(PlayerController.Get());
+	return Cast<AAuraPlayerController>(PlayerController.Get());
 }
 
 AAuraPlayerState* UAuraWidgetController::GetOwningPlayerState() const
 {
-	return CastChecked<AAuraPlayerState>(PlayerState.Get());
+	return Cast<AAuraPlayerState>(PlayerState.Get());
 }
 
 UAuraAbilitySystemComponent* UAuraWidgetController::GetOwningASC() const
 {
-	return CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent.Get());
+	return Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent.Get());
 }
 
 UAuraAttributeSet* UAuraWidgetController::GetOwningAttributeSet() const
 {
-	return CastChecked<UAuraAttributeSet>(AttributeSet.Get());
+	return Cast<UAuraAttributeSet>(AttributeSet.Get());
 }
