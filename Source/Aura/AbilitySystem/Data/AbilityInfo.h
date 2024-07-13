@@ -58,4 +58,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FAuraAbilityInfo FindAbilityInfoByTag(const FGameplayTag& AbilityTag, bool bLogNotFound = false) const;
+
+	const TArray<FAuraAbilityInfo>& GetAbilityInformation() const;
 };

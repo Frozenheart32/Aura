@@ -4,8 +4,10 @@
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AuraAbilitySystemLibrary.h"
 #include "AuraGameplayTags.h"
 #include "Abilities/AuraGameplayAbility.h"
+#include "Data/AbilityInfo.h"
 #include "Interaction/PlayerInterface.h"
 
 void UAuraAbilitySystemComponent::AbilityActorInfoSet()
@@ -134,6 +136,24 @@ FGameplayTag UAuraAbilitySystemComponent::GetStatusFromSpec(const FGameplayAbili
 	return FGameplayTag{};
 }
 
+FGameplayAbilitySpec* UAuraAbilitySystemComponent::GetSpecFromAbilityTag(const FGameplayTag& AbilityTag)
+{
+	FScopedAbilityListLock ActiveScopeLoc{*this};
+	auto& ActiveAbilities = GetActivatableAbilities();
+	for (auto& AbilitySpec : ActiveAbilities)
+	{
+		for(const FGameplayTag& Tag : AbilitySpec.Ability.Get()->AbilityTags)
+		{
+			if(Tag.MatchesTag(AbilityTag))
+			{
+				return &AbilitySpec;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 void UAuraAbilitySystemComponent::UpgradeAttribute(const FGameplayTag& AttributeTag)
 {
 	if(GetAvatarActor()->Implements<UPlayerInterface>())
@@ -143,6 +163,29 @@ void UAuraAbilitySystemComponent::UpgradeAttribute(const FGameplayTag& Attribute
 			UpgradeAttribute_OnServer(AttributeTag);
 		}
 	}
+}
+
+void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 InLevel)
+{
+	const auto& Tags = FAuraGameplayTags::Get();
+	
+	const auto AbilityInfo = UAuraAbilitySystemLibrary::GetAbilityInfo(GetAvatarActor());
+	for (const auto& Info : AbilityInfo->GetAbilityInformation())
+	{
+		if(!Info.AbilityTag.IsValid() || InLevel < Info.LevelRequirement) continue;
+		
+		if(FGameplayAbilitySpec* AbilitySpecPtr = GetSpecFromAbilityTag(Info.AbilityTag))
+		{
+			
+		}
+		else
+		{
+			FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec{Info.AbilityClass, 1};
+			AbilitySpec.DynamicAbilityTags.AddTag(Tags.Abilities_Status_Eligible);
+			GiveAbility(AbilitySpec);
+			MarkAbilitySpecDirty(AbilitySpec);
+		}
+	} 
 }
 
 void UAuraAbilitySystemComponent::UpgradeAttribute_OnServer_Implementation(FGameplayTag AttributeTag)
