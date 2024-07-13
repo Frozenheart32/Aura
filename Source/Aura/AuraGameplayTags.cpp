@@ -219,6 +219,11 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FString{"Firebolt Ability Tag"});
 
 
+	GameplayTags.Abilities_Lightning_Electrocute = TagManager.AddNativeGameplayTag(
+		FName{"Abilities.Lightning.Electrocute"},
+		FString{"Electrocute Ability Tag"});
+
+
 	/*
 	 * Cooldown 
 	 */
