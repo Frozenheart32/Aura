@@ -6,6 +6,8 @@
 #include "UI/WidgetController/AuraWidgetController.h"
 #include "SpellMenuWidgetController.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FSpellGlobeSelectedSignature, bool, bSpendPointsButtonEnabled, bool, bEquipButtonEnabled);
+
 /**
  * 
  */
@@ -19,6 +21,17 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FOnPlayerStatChangeSignature SpellPointsChanged;
 
+	UPROPERTY(BlueprintAssignable)
+	FSpellGlobeSelectedSignature OnSpellSelectedDelegate;
+
 	virtual void BroadcastInitialValues() override;
 	virtual void BindCallbacksToDependencies() override;
+	
+	UFUNCTION(BlueprintCallable)
+	void SpellGlobeSelected(const FGameplayTag& AbilityTag);
+
+
+private:
+
+	static void ShouldEnableButtons(bool& bShouldEnableSpellPointsButton, bool& bShouldEnableEquipButton, const FGameplayTag& AbilityStatus, int32 SpellPoints);
 };
