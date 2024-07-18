@@ -5,16 +5,16 @@
 
 #include "AbilitySystem/AuraAttributeSet.h"
 
-FString UAuraGameplayAbility::GetDescription(int32 Level) const
+FString UAuraGameplayAbility::GetDescription(int32 CurrentLevel) const
 {
 	return FString::Printf(TEXT("<Default>%s, </><Level>%d</>"), 
-		L"Default Ability Name - LoreIpsum", Level);
+		L"Default Ability Name - LoreIpsum", CurrentLevel);
 }
 
-FString UAuraGameplayAbility::GetNextLevelDescription(int32 Level) const
+FString UAuraGameplayAbility::GetNextLevelDescription(int32 CurrentLevel) const
 {
 	return FString::Printf(TEXT("<Default>%s, </><Level>%d</>"), 
-		L"NextLevel: - LoreIpsum blablabla", Level + 1);
+		L"NextLevel: - LoreIpsum blablabla", CurrentLevel + 1);
 }
 
 FString UAuraGameplayAbility::GetLockedDescription(int32 Level)

@@ -16,6 +16,6 @@ class AURA_API UAuraFireBolt : public UAuraProjectileSpell
 
 public:
 
-	virtual FString GetDescription(int32 Level) const override;
-	virtual FString GetNextLevelDescription(int32 Level) const override;
+	virtual FString GetDescription(int32 CurrentLevel) const override;
+	virtual FString GetNextLevelDescription(int32 CurrentLevel) const override;
 };
