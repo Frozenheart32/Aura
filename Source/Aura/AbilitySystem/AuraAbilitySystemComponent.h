@@ -54,6 +54,8 @@ public:
 	UFUNCTION(Server, Reliable)
 	void SpendSpellPoint_OnServer(const FGameplayTag& AbilityTag);
 
+	bool GetDescriptionsByAbilityTag(FString& OutDescription, FString& OutNextLevelDescription, const FGameplayTag& AbilityTag);
+
 protected:
 
 	UFUNCTION(Client, Reliable)
