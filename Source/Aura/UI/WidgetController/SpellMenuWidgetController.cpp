@@ -3,7 +3,6 @@
 
 #include "UI/WidgetController/SpellMenuWidgetController.h"
 
-#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
 #include "Player/AuraPlayerState.h"
@@ -23,6 +22,17 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 
 	AuraASC->AbilityStatusChanged.AddLambda([this](const FGameplayTag& AbilityTag, const FGameplayTag& StatusTag)
 	{
+		if(SelectedAbility.AbilityTag.MatchesTagExact(AbilityTag))
+		{
+			SelectedAbility.StatusTag = StatusTag;
+
+			bool bEnableSpendPoints = false;
+			bool bEnableEquip = false;
+
+			ShouldEnableButtons(bEnableSpendPoints, bEnableEquip, StatusTag, CurrentSpellPoints);
+			OnSpellSelectedDelegate.Broadcast(bEnableSpendPoints, bEnableEquip);
+		}
+		
 		if(AbilityInfo)
 		{
 			FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(AbilityTag);
@@ -37,6 +47,13 @@ void USpellMenuWidgetController::BindCallbacksToDependencies()
 	AuraPS->OnSpellPointsChanged.AddLambda([this](int32 NewSpellPointCount)
 	{
 		SpellPointsChanged.Broadcast(NewSpellPointCount);
+		CurrentSpellPoints = NewSpellPointCount;
+
+		bool bEnableSpendPoints = false;
+		bool bEnableEquip = false;
+
+		ShouldEnableButtons(bEnableSpendPoints, bEnableEquip, SelectedAbility.StatusTag, CurrentSpellPoints);
+		OnSpellSelectedDelegate.Broadcast(bEnableSpendPoints, bEnableEquip);
 	});
 }
 
@@ -67,6 +84,9 @@ void USpellMenuWidgetController::SpellGlobeSelected(const FGameplayTag& AbilityT
 		AbilityStatus = AuraASC->GetStatusFromSpec(*AbilitySpecPtr);
 	}
 
+	SelectedAbility.AbilityTag = AbilityTag;
+	SelectedAbility.StatusTag = AbilityStatus;
+	
 	bool bEnableSpendPoints = false;
 	bool bEnableEquip = false;
 
