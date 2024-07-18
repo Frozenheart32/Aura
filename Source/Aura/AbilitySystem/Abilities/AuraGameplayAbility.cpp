@@ -18,5 +18,5 @@ FString UAuraGameplayAbility::GetNextLevelDescription(int32 Level) const
 FString UAuraGameplayAbility::GetLockedDescription(int32 Level)
 {
 	return FString::Printf(TEXT("<Default>%s, </><Level>%d</>"), 
-		L"Spell Locked Until Level: %d", Level);
+		L"Spell Locked Until Level: ", Level);
 }
