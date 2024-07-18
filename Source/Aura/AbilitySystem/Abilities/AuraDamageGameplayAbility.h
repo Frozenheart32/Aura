@@ -31,4 +31,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage(AActor* TargetActor);
+
+protected:
+
+	float GetDamageByType(int32 InLevel, const FGameplayTag& DamageType) const;	
 };
