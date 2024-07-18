@@ -184,9 +184,40 @@ void UAuraAbilitySystemComponent::UpdateAbilityStatuses(int32 InLevel)
 			AbilitySpec.DynamicAbilityTags.AddTag(AuraTags.Abilities_Status_Eligible);
 			GiveAbility(AbilitySpec);
 			MarkAbilitySpecDirty(AbilitySpec);
-			UpdateAbilityStatus_OnClient(Info.AbilityTag, AuraTags.Abilities_Status_Eligible);
+			UpdateAbilityStatus_OnClient(Info.AbilityTag, AuraTags.Abilities_Status_Eligible, 1);
 		}
 	} 
+}
+
+void UAuraAbilitySystemComponent::SpendSpellPoint_OnServer_Implementation(const FGameplayTag& AbilityTag)
+{
+	if(FGameplayAbilitySpec* AbilitySpec = GetSpecFromAbilityTag(AbilityTag))
+	{
+		if(GetAvatarActor() && GetAvatarActor()->Implements<UPlayerInterface>())
+		{
+			IPlayerInterface::Execute_AddToSpellPoints(GetAvatarActor(), -1);
+		}
+		
+		const auto& AuraTags = FAuraGameplayTags::Get();
+		FGameplayTag Status = GetStatusFromSpec(*AbilitySpec);
+		
+		if(Status.MatchesTagExact(AuraTags.Abilities_Status_Eligible))
+		{
+			AbilitySpec->DynamicAbilityTags.RemoveTag(Status);
+			
+			//Change status - Unlocked
+			AbilitySpec->DynamicAbilityTags.AddTag(AuraTags.Abilities_Status_Unlocked);
+			Status = AuraTags.Abilities_Status_Unlocked;
+		}
+		else if(Status.MatchesTagExact(AuraTags.Abilities_Status_Equipped) ||
+			Status.MatchesTagExact(AuraTags.Abilities_Status_Unlocked))
+		{
+			AbilitySpec->Level += 1;
+		}
+
+		UpdateAbilityStatus_OnClient(AbilityTag, Status, AbilitySpec->Level);
+		MarkAbilitySpecDirty(*AbilitySpec);
+	}
 }
 
 void UAuraAbilitySystemComponent::UpgradeAttribute_OnServer_Implementation(FGameplayTag AttributeTag)
@@ -204,9 +235,9 @@ void UAuraAbilitySystemComponent::UpgradeAttribute_OnServer_Implementation(FGame
 }
 
 void UAuraAbilitySystemComponent::UpdateAbilityStatus_OnClient_Implementation(const FGameplayTag& AbilityTag,
-	const FGameplayTag& StatusTag)
+	const FGameplayTag& StatusTag, int32 AbilityLevel)
 {
-	AbilityStatusChanged.Broadcast(AbilityTag, StatusTag);
+	AbilityStatusChanged.Broadcast(AbilityTag, StatusTag, AbilityLevel);
 }
 
 void UAuraAbilitySystemComponent::OnRep_ActivateAbilities()
