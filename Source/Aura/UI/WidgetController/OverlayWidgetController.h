@@ -78,6 +78,9 @@ private:
 	UFUNCTION()
 	void OnLevelChanged(int32 NewLevel) const;
 
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot) const;
+
+
 	template<class T>
 	const T* GetDataTableRowByTag(const UDataTable* DataTable, const FGameplayTag& Tag) const;
 };
