@@ -211,5 +211,7 @@ void USpellMenuWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTa
 	Info.InputTag = Slot;
 	AbilityInfoDelegate.Broadcast(Info);
 
-	OnStopWaitForEquipDelegate.Broadcast(AbilityInfo->FindAbilityInfoByTag(AbilityTag).AbilityTag);
+	OnStopWaitForEquipDelegate.Broadcast(AbilityInfo->FindAbilityInfoByTag(AbilityTag).TypeTag);
+	OnSpellGlobeReassigned.Broadcast(AbilityTag);
+	GlobeDeselect();
 }
