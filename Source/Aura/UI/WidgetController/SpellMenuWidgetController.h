@@ -62,11 +62,16 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void EquipButtonPressed();
 
+	UFUNCTION(BlueprintCallable)
+	void SpellRowGlobePressed(const FGameplayTag& SlotTag, const FGameplayTag& AbilityType);
+
 private:
 
 	static void ShouldEnableButtons(bool& bShouldEnableSpellPointsButton, bool& bShouldEnableEquipButton, const FGameplayTag& AbilityStatus, int32 SpellPoints);
+	void OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot);
 
 	FSelectedAbility SelectedAbility;
 	int32 CurrentSpellPoints = 0;
 	bool bWaitingForEquipSelection = false;
+	FGameplayTag SelectedSlot;
 };
