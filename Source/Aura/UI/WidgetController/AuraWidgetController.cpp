@@ -3,6 +3,12 @@
 
 #include "UI/WidgetController/AuraWidgetController.h"
 
+#include "AbilitySystem/AuraAbilitySystemComponent.h"
+#include "AbilitySystem/AuraAttributeSet.h"
+#include "AbilitySystem/Data/AbilityInfo.h"
+#include "Player/AuraPlayerController.h"
+#include "Player/AuraPlayerState.h"
+
 void UAuraWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WCParams)
 {
 	PlayerController = WCParams.PlayerController;
@@ -21,22 +27,42 @@ void UAuraWidgetController::BindCallbacksToDependencies()
 	
 }
 
-APlayerController* UAuraWidgetController::GetOwningPlayerController() const
+void UAuraWidgetController::BroadcastAbilityInfo()
 {
-	return PlayerController.Get();
+	const auto AuraASC = GetOwningASC();
+	if(!AuraASC || !GetOwningASC()->bStartupAbilitiesGiven) return;
+
+	FForEachAbility BroadcastDelegate{};
+	BroadcastDelegate.BindLambda([this, AuraASC](const FGameplayAbilitySpec& AbilitySpec)
+	{
+		FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(
+			AuraASC->GetAbilityTagFromSpec(AbilitySpec));
+		
+		Info.InputTag = AuraASC->GetInputTagForSpec(AbilitySpec);
+		Info.StatusTag = UAuraAbilitySystemComponent::GetStatusFromSpec(AbilitySpec);
+		
+		AbilityInfoDelegate.Broadcast(Info);
+	});
+
+	AuraASC->ForEachAbility(BroadcastDelegate);
 }
 
-APlayerState* UAuraWidgetController::GetOwningPlayerState() const
+AAuraPlayerController* UAuraWidgetController::GetOwningPlayerController() const
 {
-	return PlayerState.Get();
+	return Cast<AAuraPlayerController>(PlayerController.Get());
 }
 
-UAbilitySystemComponent* UAuraWidgetController::GetOwningASC() const
+AAuraPlayerState* UAuraWidgetController::GetOwningPlayerState() const
 {
-	return AbilitySystemComponent.Get();
+	return Cast<AAuraPlayerState>(PlayerState.Get());
 }
 
-UAttributeSet* UAuraWidgetController::GetOwningAttributeSet() const
+UAuraAbilitySystemComponent* UAuraWidgetController::GetOwningASC() const
 {
-	return AttributeSet.Get();
+	return Cast<UAuraAbilitySystemComponent>(AbilitySystemComponent.Get());
+}
+
+UAuraAttributeSet* UAuraWidgetController::GetOwningAttributeSet() const
+{
+	return Cast<UAuraAttributeSet>(AttributeSet.Get());
 }

@@ -20,3 +20,8 @@ FAuraAbilityInfo UAbilityInfo::FindAbilityInfoByTag(const FGameplayTag& AbilityT
 
 	return FAuraAbilityInfo{};
 }
+
+const TArray<FAuraAbilityInfo>& UAbilityInfo::GetAbilityInformation() const
+{
+	return AbilityInformation;
+}

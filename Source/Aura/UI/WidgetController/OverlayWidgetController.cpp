@@ -3,6 +3,7 @@
 
 #include "UI/WidgetController/OverlayWidgetController.h"
 
+#include "AuraGameplayTags.h"
 #include "AbilitySystem/AuraAbilitySystemComponent.h"
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/AbilityInfo.h"
@@ -26,46 +27,50 @@ void UOverlayWidgetController::BroadcastInitialValues()
 
 void UOverlayWidgetController::BindCallbacksToDependencies()
 {
-	const auto AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	const auto AuraPlayerState = GetOwningPlayerState();
+	const auto AuraAttributeSet = GetOwningAttributeSet();
+	const auto AuraASC = GetOwningASC();
+
+	check(AuraASC && AuraAttributeSet && AuraPlayerState);
+
 	AuraPlayerState->OnXPChanged.AddUObject(this, &UOverlayWidgetController::OnXPChanged);
 	AuraPlayerState->OnLevelChanged.AddUObject(this, &UOverlayWidgetController::OnLevelChanged);
 
-	
-	const auto AuraAttributeSet = CastChecked<UAuraAttributeSet>(AttributeSet);
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute())
-	      .AddLambda([this](const FOnAttributeChangeData& Data)
-	      {
-	          OnHealthChanged.Broadcast(Data.NewValue);
-	      });
+	AuraASC->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetHealthAttribute())
+	       .AddLambda([this](const FOnAttributeChangeData& Data)
+	       {
+		       OnHealthChanged.Broadcast(Data.NewValue);
+	       });
 	
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxHealthAttribute())
+	AuraASC->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxHealthAttribute())
 		.AddLambda([this](const FOnAttributeChangeData& Data)
 		{
 			OnMaxHealthChanged.Broadcast(Data.NewValue);
 		});
 
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetManaAttribute())
+	AuraASC->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetManaAttribute())
 		.AddLambda([this](const FOnAttributeChangeData& Data)
 		{
 			OnManaChanged.Broadcast(Data.NewValue);
 		});
 	
-	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxManaAttribute())
+	AuraASC->GetGameplayAttributeValueChangeDelegate(AuraAttributeSet->GetMaxManaAttribute())
 		.AddLambda([this](const FOnAttributeChangeData& Data)
 		{
 			OnMaxManaChanged.Broadcast(Data.NewValue);
 		});
 
+	AuraASC->AbilityEquipped.AddUObject(this, &UOverlayWidgetController::OnAbilityEquipped);
+
 	
-	const auto AuraASC = CastChecked<UAuraAbilitySystemComponent>(AbilitySystemComponent);
 	if(AuraASC->bStartupAbilitiesGiven)
 	{
-		OnInitializeStartupAbilities(AuraASC);
+		BroadcastAbilityInfo();
 	}
 	else
 	{
-		AuraASC->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::OnInitializeStartupAbilities);
+		AuraASC->AbilitiesGivenDelegate.AddUObject(this, &UOverlayWidgetController::BroadcastAbilityInfo);
 	}
 	
 	AuraASC->EffectAssetTags
@@ -84,7 +89,8 @@ void UOverlayWidgetController::BindCallbacksToDependencies()
 
 void UOverlayWidgetController::OnXPChanged(int32 NewXP) const
 {
-	const AAuraPlayerState* AuraPlayerState = CastChecked<AAuraPlayerState>(PlayerState);
+	const AAuraPlayerState* AuraPlayerState = GetOwningPlayerState();
+	check(AuraPlayerState);
 	const ULevelUpInfo* LevelUpInfo = AuraPlayerState->LevelUpInfo;
 	checkf(LevelUpInfo, TEXT("Unable to find LevelUpInfo. Please fill out AuraPlayerState Blueprint"));
 
@@ -110,18 +116,21 @@ void UOverlayWidgetController::OnLevelChanged(int32 NewLevel) const
 	OnPlayerLevelChanged.Broadcast(NewLevel);
 }
 
-void UOverlayWidgetController::OnInitializeStartupAbilities(UAuraAbilitySystemComponent* AuraASC)
+void UOverlayWidgetController::OnAbilityEquipped(const FGameplayTag& AbilityTag, const FGameplayTag& Status,
+	const FGameplayTag& Slot, const FGameplayTag& PreviousSlot) const
 {
-	if(!AuraASC->bStartupAbilitiesGiven) return;
+	const auto& AuraTags = FAuraGameplayTags::Get();
 
-	FForEachAbility BroadcastDelegate{};
-	BroadcastDelegate.BindLambda([this, AuraASC](const FGameplayAbilitySpec& AbilitySpec)
-	{
-		FAuraAbilityInfo AuraAbilityInfo = AbilityInfo->FindAbilityInfoByTag(
-			AuraASC->GetAbilityTagFromSpec(AbilitySpec));
-		AuraAbilityInfo.InputTag = AuraASC->GetInputTagForSpec(AbilitySpec);
-		AbilityInfoDelegate.Broadcast(AuraAbilityInfo);
-	});
+	FAuraAbilityInfo LastSlotInfo;
+	LastSlotInfo.StatusTag = AuraTags.Abilities_Status_Unlocked;
+	LastSlotInfo.InputTag = PreviousSlot;
+	LastSlotInfo.AbilityTag = AuraTags.Abilities_None;
 
-	AuraASC->ForEachAbility(BroadcastDelegate);
+	//Broadcast emtpy info if Previous slot is a valid. Only if Equipped on already equipped spell
+	AbilityInfoDelegate.Broadcast(LastSlotInfo);
+
+	FAuraAbilityInfo Info = AbilityInfo->FindAbilityInfoByTag(AbilityTag);
+	Info.StatusTag = Status;
+	Info.InputTag = Slot;
+	AbilityInfoDelegate.Broadcast(Info);
 }

@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "UI/WidgetController/AttributeMenuWidgetController.h"
 #include "UI/WidgetController/OverlayWidgetController.h"
+#include "UI/WidgetController/SpellMenuWidgetController.h"
 #include "UI/Widgets/AuraUserWidget.h"
 
 
@@ -46,4 +47,16 @@ UAttributeMenuWidgetController* AAuraHUD::GetAttributeMenuWidgetController(const
 	}
 
 	return AttributeMenuController;
+}
+
+USpellMenuWidgetController* AAuraHUD::GetSpellMenuWidgetController(const FWidgetControllerParams& WCParams)
+{
+	if(SpellMenuController == nullptr)
+	{
+		SpellMenuController = NewObject<USpellMenuWidgetController>(this, SpellMenuWidgetControllerClass);
+		SpellMenuController->SetWidgetControllerParams(WCParams);
+		SpellMenuController->BindCallbacksToDependencies();
+	}
+
+	return SpellMenuController.Get();
 }
