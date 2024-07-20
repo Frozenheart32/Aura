@@ -6,6 +6,7 @@
 #include "AbilitySystem/Abilities/AuraGameplayAbility.h"
 #include "AuraDamageGameplayAbility.generated.h"
 
+struct FDamageEffectParams;
 struct FTaggedMontage;
 /**
  * 
@@ -27,12 +28,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	FScalableFloat Damage;
 
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
 	float DebuffChance = 20.f;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
 	float DebuffDamage = 5.f;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
 	float DebufFrequency = 1.f;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
 	float DebuffDuration;
 
@@ -43,4 +48,7 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage(AActor* TargetActor);
+
+	UFUNCTION(BlueprintCallable)
+	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr) const;
 };
