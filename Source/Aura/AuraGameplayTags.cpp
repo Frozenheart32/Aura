@@ -193,6 +193,22 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.DamageTypesToDebuff.Add(GameplayTags.Debuff_Arcane, GameplayTags.Debuff_Arcane);
 	GameplayTags.DamageTypesToDebuff.Add(GameplayTags.Damage_Lightning, GameplayTags.Debuff_Stun);
 	GameplayTags.DamageTypesToDebuff.Add(GameplayTags.Damage_Physical, GameplayTags.Debuff_Physical);
+
+	GameplayTags.Debuff_Chance = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Chance"},
+		FString{"Debuff Chance Tag"});
+
+	GameplayTags.Debuff_Damage = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Damage"},
+		FString{"Debuff Damage Tag"});
+
+	GameplayTags.Debuff_Duration = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Duration"},
+		FString{"Debuff Duration Tag"});
+
+	GameplayTags.Debuff_Frequency = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Frequency"},
+		FString{"Debuff Frequency Tag"});
 	
 	GameplayTags.Abilities_None = TagManager.AddNativeGameplayTag(
 		FName{"Abilities.None"},
