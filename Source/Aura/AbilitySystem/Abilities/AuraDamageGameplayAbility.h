@@ -17,12 +17,15 @@ class AURA_API UAuraDamageGameplayAbility : public UAuraGameplayAbility
 
 
 protected:
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
-	TMap<FGameplayTag, FScalableFloat> DamageTypes;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	FGameplayTag DamageType;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage")
+	FScalableFloat Damage;
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintProtected))
 	FTaggedMontage GetRandomTaggedMontageFromArray(const TArray<FTaggedMontage>& TaggedMontages) const;
@@ -31,8 +34,4 @@ public:
 	
 	UFUNCTION(BlueprintCallable)
 	void CauseDamage(AActor* TargetActor);
-
-protected:
-
-	float GetDamageByType(int32 InLevel, const FGameplayTag& DamageType) const;	
 };
