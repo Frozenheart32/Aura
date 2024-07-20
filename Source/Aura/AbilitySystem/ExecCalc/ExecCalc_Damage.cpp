@@ -138,7 +138,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	DetermineDebuff(ExecutionParams, Spec, EvaluateParameters, AuraTags, TagsToCaptureDefs); 
 
 
-	//Get Damage Set by Caller Magnidute
+	//Get Damage Set by Caller Magnitude
 	float Damage = 0.f;
 	for (const auto& [DamageTypeTag, ResistanceTag] : AuraTags.DamageTypesToResistances)
 	{
