@@ -176,6 +176,10 @@ private:
 	bool bTopOffMana = false;
 
 	void SendXPEvent(const FEffectProperties& Props);
+	
+	void HandleIncomingDamage(const FEffectProperties& Props);
+	void HandleIncomingExp(const FEffectProperties& Props);
+	void Debuff(const FEffectProperties& Props);
 
 	UFUNCTION()
 	void OnRep_Strength(const FGameplayAttributeData& OldStrength) const;
