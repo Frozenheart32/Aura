@@ -165,12 +165,10 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bFatal = NewHealth <= 0.f;
 		if(bFatal)
 		{
-			//TODO: Use Death Impulse
-
-			
 			if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor))
 			{
-				CombatInterface->Die();
+				const FVector DeathImpulse = UAuraAbilitySystemLibrary::GetDeathImpulse(Props.EffectContextHandle);
+				CombatInterface->Die(DeathImpulse);
 			}
 			else
 			{
@@ -434,15 +432,21 @@ void UAuraAttributeSet::ShowFloatingText(const FEffectProperties& Props, float D
 {
 	if(Props.SourceCharacter != Props.TargetCharacter)
 	{
-		if(const auto AuraPC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
+		if(IsValid(Props.SourceCharacter))
 		{
-			AuraPC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
-			return;
+			if(const auto AuraPC = Cast<AAuraPlayerController>(Props.SourceCharacter->Controller))
+			{
+				AuraPC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+				return;
+			}	
 		}
 
-		if(const auto AuraPC = Cast<AAuraPlayerController>(Props.TargetCharacter->Controller))
+		if(IsValid(Props.TargetCharacter))
 		{
-			AuraPC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+			if(const auto AuraPC = Cast<AAuraPlayerController>(Props.TargetCharacter->Controller))
+			{
+				AuraPC->ShowDamageNumber(Damage, Props.TargetCharacter, bBlockedHit, bCriticalHit);
+			}
 		}
 	}
 }

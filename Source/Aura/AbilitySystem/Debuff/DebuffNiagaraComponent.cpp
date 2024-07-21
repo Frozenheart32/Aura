@@ -27,8 +27,6 @@ void UDebuffNiagaraComponent::BeginPlay()
 		{
 			InASC->RegisterGameplayTagEvent(DebuffTag, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UDebuffNiagaraComponent::DebuffTagChanged);
 		});
-
-		CombatInterface->GetOnDeathDelegate().AddDynamic(this, &UDebuffNiagaraComponent::OnOwnerDeath);
 	}
 
 	if(CombatInterface)
@@ -37,9 +35,10 @@ void UDebuffNiagaraComponent::BeginPlay()
 
 void UDebuffNiagaraComponent::DebuffTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
-	if(bDead) return;
+	const bool bOwnerValid = IsValid(GetOwner());
+	const bool bOwnerAlive = bOwnerValid && GetOwner()->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsDead(GetOwner());
 	
-	if(NewCount > 0)
+	if(NewCount > 0 && bOwnerAlive)
 	{
 		Activate();
 	}
@@ -51,6 +50,5 @@ void UDebuffNiagaraComponent::DebuffTagChanged(const FGameplayTag CallbackTag, i
 
 void UDebuffNiagaraComponent::OnOwnerDeath(AActor* DeadActor)
 {
-	bDead = true;
 	Deactivate();
 }
