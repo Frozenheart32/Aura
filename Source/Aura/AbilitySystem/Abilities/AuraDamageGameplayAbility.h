@@ -29,7 +29,12 @@ protected:
 	FScalableFloat Damage;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
-	float DeathImpulseMagnitude = 0.f;
+	float DeathImpulseMagnitude = 3000.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Knockback")
+	float KnockbackForceMagnitude = 1000.f;
+	UPROPERTY(EditDefaultsOnly, Category = "Knockback")
+	float KnockbackChance = 0.f;
 
 
 	UPROPERTY(EditDefaultsOnly, Category = "Debuff")
