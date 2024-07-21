@@ -180,6 +180,8 @@ void AAuraCharacter::InitAbilityActorInfo()
 	AuraASC->AbilityActorInfoSet();
 	AuraASC->InitAbilityActorInfo(AuraPlayerState, this);
 
+	OnASCRegistered.Broadcast(AbilitySystemComponent);
+
 	if(const auto AuraPlayerController = Cast<AAuraPlayerController>(GetController()))
 	{
 		if(const auto AuraHUD = Cast<AAuraHUD>(AuraPlayerController->GetHUD()))

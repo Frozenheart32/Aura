@@ -169,6 +169,47 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Arcane, GameplayTags.Attributes_Resistance_Arcane);
 	GameplayTags.DamageTypesToResistances.Add(GameplayTags.Damage_Physical, GameplayTags.Attributes_Resistance_Physical);
 
+	/*
+	 * Debuffs
+	 */
+	GameplayTags.Debuff_Burn = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Burn"},
+		FString{"Burn Debuff Tag"});
+
+	GameplayTags.Debuff_Stun = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Stun"},
+		FString{"Stun Debuff Tag"});
+
+	GameplayTags.Debuff_Arcane = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Arcane"},
+		FString{"Arcane Debuff Tag"});
+
+	GameplayTags.Debuff_Physical = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Physical"},
+		FString{"Physical Debuff Tag"});
+
+
+	GameplayTags.DamageTypesToDebuff.Add(GameplayTags.Damage_Fire, GameplayTags.Debuff_Burn);
+	GameplayTags.DamageTypesToDebuff.Add(GameplayTags.Debuff_Arcane, GameplayTags.Debuff_Arcane);
+	GameplayTags.DamageTypesToDebuff.Add(GameplayTags.Damage_Lightning, GameplayTags.Debuff_Stun);
+	GameplayTags.DamageTypesToDebuff.Add(GameplayTags.Damage_Physical, GameplayTags.Debuff_Physical);
+
+	GameplayTags.Debuff_Chance = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Chance"},
+		FString{"Debuff Chance Tag"});
+
+	GameplayTags.Debuff_Damage = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Damage"},
+		FString{"Debuff Damage Tag"});
+
+	GameplayTags.Debuff_Duration = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Duration"},
+		FString{"Debuff Duration Tag"});
+
+	GameplayTags.Debuff_Frequency = TagManager.AddNativeGameplayTag(
+		FName{"Debuff.Frequency"},
+		FString{"Debuff Frequency Tag"});
+	
 	GameplayTags.Abilities_None = TagManager.AddNativeGameplayTag(
 		FName{"Abilities.None"},
 		FString{"No Ability Tag - like the nullptr for Ability Tags"});
