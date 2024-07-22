@@ -179,6 +179,12 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		}
 		else
 		{
+			//check Debuffs
+			if(UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
+			{
+				Debuff(Props);
+			}
+			
 			FGameplayTagContainer TagContainer;
 			TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
 			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
@@ -193,12 +199,6 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bBlocked = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
 		const bool bCritical = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
 		ShowFloatingText(Props, LocalIncomingDamage, bBlocked, bCritical);
-
-		//check Debuffs
-		if(UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
-		{
-			Debuff(Props);
-		}
 	}
 }
 
