@@ -5,6 +5,7 @@
 
 #include "AbilitySystem/AuraAbilitySystemLibrary.h"
 #include "Actor/AuraProjectile.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 #include "Interaction/CombatInterface.h"
 #include "Kismet/KismetSystemLibrary.h"
 
@@ -115,6 +116,21 @@ void UAuraFireBolt::SpawnProjectiles(const FVector& ProjectileTargetLocation, co
 
 		
 				SpawnedProjectile->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+
+				if(HomingTarget && HomingTarget->Implements<UCombatInterface>())
+				{
+					SpawnedProjectile->GetMovementComponent()->HomingTargetComponent = HomingTarget->GetRootComponent();
+				}
+				else
+				{
+					SpawnedProjectile->HomingTargetSceneComponent = NewObject<USceneComponent>(USceneComponent::StaticClass());
+					SpawnedProjectile->HomingTargetSceneComponent->SetWorldLocation(ProjectileTargetLocation);
+					SpawnedProjectile->GetMovementComponent()->HomingTargetComponent = SpawnedProjectile->HomingTargetSceneComponent;
+				}
+
+				SpawnedProjectile->GetMovementComponent()->HomingAccelerationMagnitude = FMath::FRandRange(HomingAccelerationMin, HomingAccelerationMax);
+				SpawnedProjectile->GetMovementComponent()->bIsHomingProjectile = bLaunchHomingProjectile;
+				
 				SpawnedProjectile->FinishSpawning(SpawnTransform);
 			} 
 		}

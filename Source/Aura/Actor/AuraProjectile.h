@@ -11,6 +11,7 @@
 class UNiagaraSystem;
 class UProjectileMovementComponent;
 class USphereComponent;
+class USceneComponent;
 
 
 UCLASS()
@@ -25,11 +26,19 @@ public:
 	UPROPERTY(BlueprintReadWrite, meta=(ExposeOnSpawn = true))
 	FDamageEffectParams DamageEffectParams;
 
+	UPROPERTY()
+	TObjectPtr<USceneComponent> HomingTargetSceneComponent;
+
 protected:
 	
 	virtual void BeginPlay() override;
 
 	virtual void Destroyed() override;
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE UProjectileMovementComponent* GetMovementComponent() const { return  MovementComponent; }
 
 private:
 
