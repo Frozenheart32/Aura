@@ -16,7 +16,7 @@ class AURA_API UAuraBeamSpell : public UAuraDamageGameplayAbility
 
 protected:
 
-	UPROPERTY(BlueprintReadWrite, Category= "Beam")
+	UPROPERTY(BlueprintReadWrite, Category = "Beam")
 	FVector MouseHitLocation;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Beam")
@@ -25,10 +25,13 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Beam")
 	TObjectPtr<APlayerController> OwnerPlayerController;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Beam")
+	TObjectPtr<ACharacter> OwnerCharacter;
+
 public:
 
 	UFUNCTION(BlueprintCallable)
 	void StoreMouseDataInfo(const FHitResult& HitResult);
 	UFUNCTION(BlueprintCallable)
-	void StoreOwnerPlayerController();
+	void StoreOwnerVariables();
 };
