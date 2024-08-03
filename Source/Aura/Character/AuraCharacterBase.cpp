@@ -170,6 +170,11 @@ FOnDeath& AAuraCharacterBase::GetOnDeathDelegate()
 	return OnDeath;
 }
 
+void AAuraCharacterBase::SetInShockLoop_Implementation(bool bInLoop)
+{
+	bInShockLoop = bInLoop;
+}
+
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
 	

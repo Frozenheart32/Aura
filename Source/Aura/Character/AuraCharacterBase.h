@@ -85,6 +85,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	bool bInShockLoop = false;
+
 	/*
 	 * Minions
 	 */
@@ -123,6 +126,8 @@ public:
 	FOnDeath OnDeath;
 	virtual FOnASCRegistered& GetOnAscRegisteredDelegate() override;
 	virtual FOnDeath& GetOnDeathDelegate() override;
+
+	virtual void SetInShockLoop_Implementation(bool bInLoop) override;
 
 
 
