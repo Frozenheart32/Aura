@@ -114,6 +114,19 @@ void AAuraPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AAuraPlayerController::CursorTrace()
 {
+	if(GetASC() && GetASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_CursorTrace))
+	{
+		if(LastActor.IsValid())
+			LastActor->UnHighlightActor();
+
+		if(ThisActor.IsValid())
+			ThisActor->UnHighlightActor();
+
+		LastActor = nullptr;
+		ThisActor = nullptr;
+		return;
+	}
+	
 	GetHitResultUnderCursor(ECC_Visibility, false, CursorHit);
 	
 	if(!CursorHit.bBlockingHit) return;
@@ -124,19 +137,20 @@ void AAuraPlayerController::CursorTrace()
 	if(LastActor != ThisActor)
 	{
 		if(LastActor.IsValid())
-		{
 			LastActor->UnHighlightActor();
-		}
 
 		if(ThisActor.IsValid())
-		{
 			ThisActor->HighlightActor();
-		}
 	}
 }
 
 void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
+	if(GetASC() && GetASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
+	{
+		return;
+	}
+	
 	if(InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
 		bTargeting = ThisActor.IsValid() ? true : false;
@@ -151,6 +165,11 @@ void AAuraPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
+	if(GetASC() && GetASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputReleased))
+	{
+		return;
+	}
+	
 	if(!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
 	{
 		GetASC()->AbilityInputTagReleased(InputTag);
@@ -180,7 +199,10 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 				}
 			}
 
-			UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+			if(GetASC() && !GetASC()->HasMatchingGameplayTag(FAuraGameplayTags::Get().Player_Block_InputPressed))
+			{
+				UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ClickNiagaraSystem, CachedDestination);
+			}
 		}
 
 		FollowTime = 0.f;
@@ -190,7 +212,13 @@ void AAuraPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 
 void AAuraPlayerController::AbilityInputTagHeld(FGameplayTag InputTag)
 {
-	if(!InputTag.MatchesTagExact(FAuraGameplayTags::Get().InputTag_LMB))
+	const auto& AuraTags = FAuraGameplayTags::Get();
+	if(GetASC() && GetASC()->HasMatchingGameplayTag(AuraTags.Player_Block_InputHeld))
+	{
+		return;
+	}
+	
+	if(!InputTag.MatchesTagExact(AuraTags.InputTag_LMB))
 	{
 		GetASC()->AbilityInputTagHeld(InputTag);
 		return;
