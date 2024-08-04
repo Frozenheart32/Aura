@@ -85,7 +85,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite)
 	bool bInShockLoop = false;
 
 	/*
@@ -103,6 +103,8 @@ private:
 	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilities;
 
 public:
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const;
