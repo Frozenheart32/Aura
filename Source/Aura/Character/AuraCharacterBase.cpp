@@ -175,6 +175,11 @@ void AAuraCharacterBase::SetInShockLoop_Implementation(bool bInLoop)
 	bInShockLoop = bInLoop;
 }
 
+USkeletalMeshComponent* AAuraCharacterBase::GetWeapon_Implementation()
+{
+	return Weapon;
+}
+
 void AAuraCharacterBase::InitAbilityActorInfo()
 {
 	

@@ -128,6 +128,7 @@ public:
 	virtual FOnDeath& GetOnDeathDelegate() override;
 
 	virtual void SetInShockLoop_Implementation(bool bInLoop) override;
+	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 
 
 
