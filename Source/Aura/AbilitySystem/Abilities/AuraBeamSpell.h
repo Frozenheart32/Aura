@@ -34,4 +34,7 @@ public:
 	void StoreMouseDataInfo(const FHitResult& HitResult);
 	UFUNCTION(BlueprintCallable)
 	void StoreOwnerVariables();
+
+	UFUNCTION(BlueprintCallable)
+	void TraceFirstTarget(const FVector& BeamTargetLocation);
 };
