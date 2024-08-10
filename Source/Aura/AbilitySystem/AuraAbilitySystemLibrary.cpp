@@ -431,3 +431,39 @@ TArray<FVector> UAuraAbilitySystemLibrary::EvenlyRotatorVectors(const FVector& F
 
 	return Vectors;
 }
+
+void UAuraAbilitySystemLibrary::GetClosestTargets(TArray<AActor*>& OutClosestActors, int32 MaxTargets,
+	const TArray<AActor*>& Actors, const FVector& Origin)
+{
+	if(Actors.Num() <= MaxTargets)
+	{
+		OutClosestActors = Actors;
+		return;
+	}
+
+	TArray<AActor*> ActorsToCheck = Actors;
+	int32 NumTargetToFound = 0;
+
+	while (NumTargetToFound < MaxTargets)
+	{
+		if(ActorsToCheck.Num() == 0) break;
+		
+		double ClosesDistance = TNumericLimits<double>::Max();
+		AActor* ClosestActor = nullptr;
+		
+		for (const auto PotentialTarget : ActorsToCheck)
+		{
+			const double Distance = (PotentialTarget->GetActorLocation() - Origin).Length();
+			if(Distance < ClosesDistance)
+			{
+				ClosesDistance = Distance;
+				ClosestActor = PotentialTarget;
+			}
+		}
+
+		ActorsToCheck.Remove(ClosestActor);
+		OutClosestActors.AddUnique(ClosestActor);
+		
+		NumTargetToFound++;
+	}
+}

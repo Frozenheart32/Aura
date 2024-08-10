@@ -109,4 +109,7 @@ public:
 	static TArray<FRotator> EvenlySpacedRotators(const FVector& Forward, const FVector& Axis, float Spread, int32 NumRotators);
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static TArray<FVector> EvenlyRotatorVectors(const FVector& Forward, const FVector& Axis, float Spread, int32 NumVectors);
+
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
+	static void GetClosestTargets(TArray<AActor*>& OutClosestActors, int32 MaxTargets, const TArray<AActor*>& Actors, const FVector& Origin);
 };

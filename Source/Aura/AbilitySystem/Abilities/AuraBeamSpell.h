@@ -28,6 +28,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Beam")
 	TObjectPtr<ACharacter> OwnerCharacter;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Beam")
+	int32 MaxNumShockTargets = 5;
+
 public:
 
 	UFUNCTION(BlueprintCallable)
@@ -37,4 +40,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void TraceFirstTarget(const FVector& BeamTargetLocation);
+
+	UFUNCTION(BlueprintCallable)
+	void StoreAdditionalTargets(TArray<AActor*>& OutAdditionalTargets);
 };
