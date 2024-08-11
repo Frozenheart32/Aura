@@ -60,4 +60,6 @@ protected:
 
 	UFUNCTION(NetMulticast, Reliable)
 	void LevelUpParticles_Multicast() const;
+
+	virtual void OnRep_Stunned() override;
 };
