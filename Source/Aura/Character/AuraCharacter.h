@@ -62,4 +62,5 @@ protected:
 	void LevelUpParticles_Multicast() const;
 
 	virtual void OnRep_Stunned() override;
+	virtual void OnRep_Burned() override;
 };

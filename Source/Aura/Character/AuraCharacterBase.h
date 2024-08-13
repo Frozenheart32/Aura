@@ -87,6 +87,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UDebuffNiagaraComponent> StunDebuffComponent;
+
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite)
 	bool bInShockLoop = false;
 
@@ -98,6 +101,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Stunned)
 	bool bIsStunned = false;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Burned)
+	bool bIsBurned = false;
 
 private:
 
@@ -166,4 +172,6 @@ protected:
 	
 	UFUNCTION()
 	virtual void OnRep_Stunned();
+	UFUNCTION()
+	virtual void OnRep_Burned();
 };
