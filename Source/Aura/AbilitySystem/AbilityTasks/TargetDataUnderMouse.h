@@ -26,6 +26,7 @@ public:
 	static UTargetDataUnderMouse* CreateTargetDataUnderMouse(UGameplayAbility* OwningAbility);
 
 protected:
+	
 	virtual void Activate() override;
 	void SendMouseCursorData();
 	

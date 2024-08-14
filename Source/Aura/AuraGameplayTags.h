@@ -98,6 +98,8 @@ public:
 
 	FGameplayTag Cooldown_Fire_Firebolt;
 
+	FGameplayTag Cooldown_Lightning_Electrocute;
+
 	FGameplayTag CombatSocket_Weapon;
 	FGameplayTag CombatSocket_RightHand;
 	FGameplayTag CombatSocket_LeftHand;
@@ -113,6 +115,12 @@ public:
 
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToDebuff;
+
+
+	FGameplayTag Player_Block_InputPressed;
+	FGameplayTag Player_Block_InputHeld;
+	FGameplayTag Player_Block_InputReleased;
+	FGameplayTag Player_Block_CursorTrace;
 
 private:
 

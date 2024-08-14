@@ -179,9 +179,18 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		}
 		else
 		{
-			FGameplayTagContainer TagContainer;
-			TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
-			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);
+			//check Debuffs
+			if(UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
+			{
+				Debuff(Props);
+			}
+
+			if(Props.TargetCharacter->Implements<UCombatInterface>() && !ICombatInterface::Execute_IsBeingShocked(Props.TargetCharacter))
+			{
+				FGameplayTagContainer TagContainer;
+				TagContainer.AddTag(FAuraGameplayTags::Get().Effects_HitReact);
+				Props.TargetASC->TryActivateAbilitiesByTag(TagContainer);	
+			}
 
 			const FVector KnockbackForce = UAuraAbilitySystemLibrary::GetKnockbackForce(Props.EffectContextHandle);
 			if(!KnockbackForce.IsNearlyZero(1.f) && IsValid(Props.TargetCharacter))
@@ -193,12 +202,6 @@ void UAuraAttributeSet::HandleIncomingDamage(const FEffectProperties& Props)
 		const bool bBlocked = UAuraAbilitySystemLibrary::IsBlockedHit(Props.EffectContextHandle);
 		const bool bCritical = UAuraAbilitySystemLibrary::IsCriticalHit(Props.EffectContextHandle);
 		ShowFloatingText(Props, LocalIncomingDamage, bBlocked, bCritical);
-
-		//check Debuffs
-		if(UAuraAbilitySystemLibrary::IsSuccessfulDebuff(Props.EffectContextHandle))
-		{
-			Debuff(Props);
-		}
 	}
 }
 
@@ -259,9 +262,18 @@ void UAuraAttributeSet::Debuff(const FEffectProperties& Props)
 	//Effect->InheritableOwnedTagsContainer.AddTag(AuraTags.DamageTypesToDebuff[DamageType]);
 	auto& TargetTagsComponent = Effect->AddComponent<UTargetTagsGameplayEffectComponent>();
 	FInheritedTagContainer InheritedTagContainer;
-	InheritedTagContainer.AddTag(AuraTags.DamageTypesToDebuff[DamageType]);
-	TargetTagsComponent.SetAndApplyTargetTagChanges(InheritedTagContainer);
+	const FGameplayTag DebuffTag = AuraTags.DamageTypesToDebuff[DamageType];
+	InheritedTagContainer.AddTag(DebuffTag);
+	if(DebuffTag.MatchesTagExact(AuraTags.Debuff_Stun))
+	{
+		InheritedTagContainer.AddTag(AuraTags.Player_Block_CursorTrace);
+		InheritedTagContainer.AddTag(AuraTags.Player_Block_InputHeld);
+		InheritedTagContainer.AddTag(AuraTags.Player_Block_InputPressed);
+		InheritedTagContainer.AddTag(AuraTags.Player_Block_InputReleased);
+	}
 
+	TargetTagsComponent.SetAndApplyTargetTagChanges(InheritedTagContainer);
+	
 	Effect->StackingType = EGameplayEffectStackingType::AggregateBySource;
 	Effect->StackLimitCount = 1;
 

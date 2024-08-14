@@ -35,6 +35,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character Class Defaults")
 	ECharacterClass CharacterClass = ECharacterClass::Warrior;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
+	float BaseWalkSpeed = 600.f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat")
 	TObjectPtr<USkeletalMeshComponent> Weapon;
@@ -85,11 +87,23 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UDebuffNiagaraComponent> BurnDebuffComponent;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	TObjectPtr<UDebuffNiagaraComponent> StunDebuffComponent;
+
+	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite)
+	bool bInBeingShocked = false;
+
 	/*
 	 * Minions
 	 */
 	
 	int32 MinionCount = 0;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Stunned)
+	bool bIsStunned = false;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Burned)
+	bool bIsBurned = false;
 
 private:
 
@@ -100,6 +114,8 @@ private:
 	TArray<TSubclassOf<UGameplayAbility>> StartupPassiveAbilities;
 
 public:
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UAttributeSet* GetAttributeSet() const;
@@ -123,6 +139,10 @@ public:
 	FOnDeath OnDeath;
 	virtual FOnASCRegistered& GetOnAscRegisteredDelegate() override;
 	virtual FOnDeath& GetOnDeathDelegate() override;
+
+	virtual void SetIsBeingShocked_Implementation(bool bInShock) override;
+	virtual bool IsBeingShocked_Implementation() const override;
+	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 
 
 
@@ -148,4 +168,11 @@ protected:
 	void StartDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
 	UFUNCTION(BlueprintImplementableEvent)
 	void StartWeaponDissolveTimeline(UMaterialInstanceDynamic* DynamicMaterialInstance);
+
+	virtual void StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	
+	UFUNCTION()
+	virtual void OnRep_Stunned();
+	UFUNCTION()
+	virtual void OnRep_Burned();
 };

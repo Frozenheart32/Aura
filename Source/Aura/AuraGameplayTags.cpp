@@ -276,7 +276,9 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName{"Cooldown.Fire.Firebolt"},
 		FString{"Firebolt Cooldown Tag"});
 
-
+	GameplayTags.Cooldown_Lightning_Electrocute = TagManager.AddNativeGameplayTag(
+		FName{"Cooldown.Lightning.Electrocute"},
+		FString{"Electrocute Cooldown Tag"});
 
 	
 	/*
@@ -323,7 +325,28 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	 * Effects
 	 */
 
-	GameplayTags.Effects_HitReact= TagManager.AddNativeGameplayTag(
+	GameplayTags.Effects_HitReact = TagManager.AddNativeGameplayTag(
 		FName{"Effects.HitReact"},
 		FString{"Tag granted when Hit Reacting"});
+
+
+	/*
+	 * Player Tags
+	 */
+	
+	GameplayTags.Player_Block_CursorTrace = TagManager.AddNativeGameplayTag(
+		FName{"Player.Block.CursorTrace"},
+		FString{"Block tracing under the cursor"});
+
+	GameplayTags.Player_Block_InputHeld = TagManager.AddNativeGameplayTag(
+		FName{"Player.Block.InputHeld"},
+		FString{"Block Input Held callback for input"});
+
+	GameplayTags.Player_Block_InputPressed = TagManager.AddNativeGameplayTag(
+		FName{"Player.Block.InputPressed"},
+		FString{"Block Input Pressed callback for input"});
+
+	GameplayTags.Player_Block_InputReleased = TagManager.AddNativeGameplayTag(
+		FName{"Player.Block.InputReleased"},
+		FString{"Block Input Released callback for input"});
 }

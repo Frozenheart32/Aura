@@ -135,6 +135,9 @@ void AAuraEnemy::InitAbilityActorInfo()
 		InitializeDefaultAttributes();
 
 	OnASCRegistered.Broadcast(AbilitySystemComponent);
+
+	AbilitySystemComponent->RegisterGameplayTagEvent(FAuraGameplayTags::Get().Debuff_Stun, EGameplayTagEventType::NewOrRemoved)
+		.AddUObject(this, &AAuraEnemy::StunTagChanged);
 }
 
 void AAuraEnemy::InitializeDefaultAttributes()
@@ -150,5 +153,15 @@ void AAuraEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCou
 	if(AuraAIController.IsValid() && AuraAIController->GetBlackboardComponent())
 	{
 		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName{"HitReacting"}, bHitReacting);
+	}
+}
+
+void AAuraEnemy::StunTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	Super::StunTagChanged(CallbackTag, NewCount);
+
+	if(AuraAIController.IsValid() && AuraAIController->GetBlackboardComponent())
+	{
+		AuraAIController->GetBlackboardComponent()->SetValueAsBool(FName{"Stunned"}, bIsStunned);
 	}
 }

@@ -381,3 +381,89 @@ FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const 
 	Params.TargetAbilitySystemComponent->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 	return EffectContextHandle;
 }
+
+TArray<FRotator> UAuraAbilitySystemLibrary::EvenlySpacedRotators(const FVector& Forward, const FVector& Axis, float Spread, int32 NumRotators)
+{
+	TArray<FRotator> Rotators;
+	
+	const FVector LeftOfSpread = Forward.RotateAngleAxis(-Spread / 2.f, Axis);
+	if(NumRotators > 1)
+	{
+		Rotators.Reserve(NumRotators);
+		
+		const float DeltaSpread = Spread / (NumRotators - 1);
+		for (int32 i = 0; i < NumRotators; i++)
+		{
+			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);
+			Rotators.Add(Direction.Rotation());
+		}	
+	}
+	else
+	{
+		Rotators.Reserve(1);
+		Rotators.Add(Forward.Rotation());
+	}
+
+	return Rotators;
+}
+
+TArray<FVector> UAuraAbilitySystemLibrary::EvenlyRotatorVectors(const FVector& Forward, const FVector& Axis, float Spread, int32 NumVectors)
+{
+	TArray<FVector> Vectors;
+	
+	const FVector LeftOfSpread = Forward.RotateAngleAxis(-Spread / 2.f, Axis);
+	if(NumVectors > 1)
+	{
+		Vectors.Reserve(NumVectors);
+		
+		const float DeltaSpread = Spread / (NumVectors - 1);
+		for (int32 i = 0; i < NumVectors; i++)
+		{
+			const FVector Direction = LeftOfSpread.RotateAngleAxis(DeltaSpread * i, FVector::UpVector);
+			Vectors.Add(Direction);
+		}	
+	}
+	else
+	{
+		Vectors.Reserve(1);
+		Vectors.Add(Forward);
+	}
+
+	return Vectors;
+}
+
+void UAuraAbilitySystemLibrary::GetClosestTargets(TArray<AActor*>& OutClosestActors, int32 MaxTargets,
+	const TArray<AActor*>& Actors, const FVector& Origin)
+{
+	if(Actors.Num() <= MaxTargets)
+	{
+		OutClosestActors = Actors;
+		return;
+	}
+
+	TArray<AActor*> ActorsToCheck = Actors;
+	int32 NumTargetToFound = 0;
+
+	while (NumTargetToFound < MaxTargets)
+	{
+		if(ActorsToCheck.Num() == 0) break;
+		
+		double ClosesDistance = TNumericLimits<double>::Max();
+		AActor* ClosestActor = nullptr;
+		
+		for (const auto PotentialTarget : ActorsToCheck)
+		{
+			const double Distance = (PotentialTarget->GetActorLocation() - Origin).Length();
+			if(Distance < ClosesDistance)
+			{
+				ClosesDistance = Distance;
+				ClosestActor = PotentialTarget;
+			}
+		}
+
+		ActorsToCheck.Remove(ClosestActor);
+		OutClosestActors.AddUnique(ClosestActor);
+		
+		NumTargetToFound++;
+	}
+}
