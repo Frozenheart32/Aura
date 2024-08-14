@@ -91,7 +91,7 @@ protected:
 	TObjectPtr<UDebuffNiagaraComponent> StunDebuffComponent;
 
 	UPROPERTY(Replicated, VisibleAnywhere, BlueprintReadWrite)
-	bool bInShockLoop = false;
+	bool bInBeingShocked = false;
 
 	/*
 	 * Minions
@@ -140,7 +140,8 @@ public:
 	virtual FOnASCRegistered& GetOnAscRegisteredDelegate() override;
 	virtual FOnDeath& GetOnDeathDelegate() override;
 
-	virtual void SetInShockLoop_Implementation(bool bInLoop) override;
+	virtual void SetIsBeingShocked_Implementation(bool bInShock) override;
+	virtual bool IsBeingShocked_Implementation() const override;
 	virtual USkeletalMeshComponent* GetWeapon_Implementation() override;
 
 

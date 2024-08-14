@@ -50,7 +50,7 @@ void AAuraCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& O
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AAuraCharacterBase, bInShockLoop);
+	DOREPLIFETIME(AAuraCharacterBase, bInBeingShocked);
 	DOREPLIFETIME(AAuraCharacterBase, bIsStunned);
 	DOREPLIFETIME(AAuraCharacterBase, bIsBurned);
 }
@@ -189,9 +189,14 @@ FOnDeath& AAuraCharacterBase::GetOnDeathDelegate()
 	return OnDeath;
 }
 
-void AAuraCharacterBase::SetInShockLoop_Implementation(bool bInLoop)
+void AAuraCharacterBase::SetIsBeingShocked_Implementation(bool bInShock)
 {
-	bInShockLoop = bInLoop;
+	bInBeingShocked = bInShock;
+}
+
+bool AAuraCharacterBase::IsBeingShocked_Implementation() const
+{
+	return bInBeingShocked;
 }
 
 USkeletalMeshComponent* AAuraCharacterBase::GetWeapon_Implementation()
