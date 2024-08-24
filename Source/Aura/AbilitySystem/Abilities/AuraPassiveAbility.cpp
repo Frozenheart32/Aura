@@ -14,7 +14,7 @@ void UAuraPassiveAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 
 	if(UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo())))
 	{
-		AuraASC->DeactivatePassiveAbility.AddUObject(this, &ThisClass::ReceiveDeactivate);
+		DeactivateHandle = AuraASC->DeactivatePassiveAbility.AddUObject(this, &ThisClass::ReceiveDeactivate);
 	}	
 }
 
@@ -22,6 +22,11 @@ void UAuraPassiveAbility::ReceiveDeactivate(const FGameplayTag& AbilityTag)
 {
 	if(AbilityTags.HasTag(AbilityTag))
 	{
+		if(UAuraAbilitySystemComponent* AuraASC = Cast<UAuraAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo())))
+		{
+			AuraASC->DeactivatePassiveAbility.Remove(DeactivateHandle);
+		}
+		
 		EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true, true);
 	}
 }

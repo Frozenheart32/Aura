@@ -21,4 +21,8 @@ public:
 
 	UFUNCTION()
 	void ReceiveDeactivate(const FGameplayTag& AbilityTag);
+
+private:
+	
+	FDelegateHandle DeactivateHandle;
 };

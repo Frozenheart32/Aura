@@ -45,14 +45,17 @@ public:
 	void ForEachAbility(const FForEachAbility& Delegate);
 
 	FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec) const;
-	
-	FGameplayTag GetInputTagForSpec(const FGameplayAbilitySpec& AbilitySpec) const;
-	FGameplayTag GetInputTagFromAbilityTag(const FGameplayTag& AbilityTag);
-	
+	static FGameplayTag GetInputTagForSpec(const FGameplayAbilitySpec& AbilitySpec);
+	FGameplayTag GetSlotFromAbilityTag(const FGameplayTag& AbilityTag);
 	static FGameplayTag GetStatusFromSpec(const FGameplayAbilitySpec& AbilitySpec);
 	FGameplayTag GetStatusFromAbilityTag(const FGameplayTag& AbilityTag);
-	
 	FGameplayAbilitySpec* GetSpecFromAbilityTag(const FGameplayTag& AbilityTag);
+	bool SlotIsEmpty(const FGameplayTag& Slot);
+	static bool AbilityHasSlot(const FGameplayAbilitySpec& AbilitySpec, const FGameplayTag& Slot);
+	static bool AbilityHasAnySlot(const FGameplayAbilitySpec& AbilitySpec);
+	FGameplayAbilitySpec* GetSpecWithSlot(const FGameplayTag& Slot);
+	bool IsPassiveAbility(const FGameplayAbilitySpec& Spec) const;
+	static void AssignSlotToAbility(FGameplayAbilitySpec& Spec, const FGameplayTag& Slot);
 
 	void UpgradeAttribute(const FGameplayTag& AttributeTag);
 	UFUNCTION(Server, Reliable)
@@ -71,7 +74,7 @@ public:
 
 	bool GetDescriptionsByAbilityTag(FString& OutDescription, FString& OutNextLevelDescription, const FGameplayTag& AbilityTag);
 
-	void ClearSlot(FGameplayAbilitySpec* Spec);
+	static void ClearSlot(FGameplayAbilitySpec* Spec);
 	void ClearAbilitiesOfSlot(const FGameplayTag& Slot);
 	bool AbilityHasSlot(FGameplayAbilitySpec* Spec, const FGameplayTag& SlotTag) const;
 
