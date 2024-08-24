@@ -14,6 +14,7 @@ DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&);
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FAbilityStatusChanged, const FGameplayTag& /*AbilityTag*/, const FGameplayTag& /*StatusTag*/, int32 /*AbilityLevel*/);
 DECLARE_MULTICAST_DELEGATE_FourParams(FAbilityEquipped, const FGameplayTag& /*AbilityTags*/, const FGameplayTag& /*Status*/, const FGameplayTag& /*Slot*/, const FGameplayTag& /*PrevSlot*/);
 DECLARE_MULTICAST_DELEGATE_OneParam(FDeactivatePassiveAbility, const FGameplayTag& /*AbilityTag*/)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FActivatePassiveEffect, const FGameplayTag& /* AbilityTag */, bool /* bActivate */);
 
 /**
  * 
@@ -30,6 +31,7 @@ public:
 	FAbilityStatusChanged AbilityStatusChanged;
 	FAbilityEquipped AbilityEquipped;
 	FDeactivatePassiveAbility DeactivatePassiveAbility;
+	FActivatePassiveEffect ActivatePassiveEffect;
 
 	
 	bool bStartupAbilitiesGiven = false;
@@ -68,10 +70,11 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void EquipAbility_OnServer(const FGameplayTag& AbilityTag, const FGameplayTag& SlotTag);
-
 	UFUNCTION(Client, Reliable)
 	void EquipAbility_OnClient(const FGameplayTag& AbilityTag, const FGameplayTag& Status, const FGameplayTag& Slot, const FGameplayTag& PreviousSlot);
-
+	UFUNCTION(NetMulticast, Unreliable)
+	void Multicast_ActivatePassiveEffect(const FGameplayTag& AbilityTag, bool bActivate);
+	
 	bool GetDescriptionsByAbilityTag(FString& OutDescription, FString& OutNextLevelDescription, const FGameplayTag& AbilityTag);
 
 	static void ClearSlot(FGameplayAbilitySpec* Spec);
