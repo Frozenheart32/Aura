@@ -269,6 +269,23 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 
 
 	/*
+	 * Passive spells
+	 */
+
+	GameplayTags.Abilities_Passive_HaloOfProtection = TagManager.AddNativeGameplayTag(
+		FName{"Abilities.Passive.HaloOfProtection"},
+		FString{"Halo Of Protection Ability Tag"});
+
+	GameplayTags.Abilities_Passive_LifeSiphon = TagManager.AddNativeGameplayTag(
+		FName{"Abilities.Passive.LifeSiphon"},
+		FString{"Life Siphon Ability Tag"});
+
+	GameplayTags.Abilities_Passive_ManaSiphon = TagManager.AddNativeGameplayTag(
+		FName{"Abilities.Passive.ManaSiphon"},
+		FString{"Mana Siphon Ability Tag"});
+
+
+	/*
 	 * Cooldown 
 	 */
 
