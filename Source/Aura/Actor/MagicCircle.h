@@ -8,7 +8,7 @@
 
 class UDecalComponent;
 
-UCLASS()
+UCLASS(Abstract)
 class AURA_API AMagicCircle : public AActor
 {
 	GENERATED_BODY()

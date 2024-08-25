@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "AuraPlayerController.generated.h"
 
+class AMagicCircle;
 class UNiagaraSystem;
 class UDamageTextComponent;
 class USplineComponent;
@@ -30,6 +31,11 @@ public:
 	AAuraPlayerController();
 
 	virtual void PlayerTick(float DeltaTime) override;
+
+	UFUNCTION(BlueprintCallable)
+	void ShowMagicCircle();
+	UFUNCTION(BlueprintCallable)
+	void HideMagicCircle();
 
 protected:
 
@@ -100,4 +106,12 @@ private:
 
 	UAuraAbilitySystemComponent* GetASC() const;
 	void AutoRun();
+
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<AMagicCircle> MagicCircleClass;
+
+	UPROPERTY()
+	TObjectPtr<AMagicCircle> MagicCircle;
+
+	void UpdateMagicCircleLocation();
 };
