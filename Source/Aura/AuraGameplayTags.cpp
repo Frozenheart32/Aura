@@ -258,6 +258,9 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FString{"Unlocked Status Tag"});
 	
 
+	/*
+	 * Offensive Spells
+	 */
 	GameplayTags.Abilities_Fire_Firebolt = TagManager.AddNativeGameplayTag(
 		FName{"Abilities.Fire.Firebolt"},
 		FString{"Firebolt Ability Tag"});
@@ -266,6 +269,11 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 	GameplayTags.Abilities_Lightning_Electrocute = TagManager.AddNativeGameplayTag(
 		FName{"Abilities.Lightning.Electrocute"},
 		FString{"Electrocute Ability Tag"});
+
+
+	GameplayTags.Abilities_Arcane_ArcaneShards = TagManager.AddNativeGameplayTag(
+		FName{"Abilities.Arcane.ArcaneShards"},
+		FString{"ArcaneShards Ability Tag"});
 
 
 	/*
