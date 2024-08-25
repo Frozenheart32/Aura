@@ -27,4 +27,7 @@ protected:
 public:
 
 	virtual void Tick(float DeltaSeconds) override;
+
+	UFUNCTION(BlueprintCallable)
+	void SetDecalMaterial(UMaterialInterface* DecalMaterial);
 };
