@@ -9,48 +9,33 @@
 #define CREATE_POINT(Point)										\
 	Point = CreateDefaultSubobject<USceneComponent>(#Point);	\
 	ImmutablePts.Add(Point);									\
+	Point->SetupAttachment(GetRootComponent());					\
 
 // Sets default values
 APointCollection::APointCollection()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
-
-	CREATE_POINT(Pt_0);
+	
+	Pt_0 = CreateDefaultSubobject<USceneComponent>("Pt_0");	\
+	ImmutablePts.Add(Pt_0);
 	SetRootComponent(Pt_0);
 
 	CREATE_POINT(Pt_1);
-	Pt_1->SetupAttachment(GetRootComponent());
-	
 	CREATE_POINT(Pt_2);
-	Pt_2->SetupAttachment(GetRootComponent());
-	
 	CREATE_POINT(Pt_3);
-	Pt_3->SetupAttachment(GetRootComponent());
-	
 	CREATE_POINT(Pt_4);
-	Pt_4->SetupAttachment(GetRootComponent());
-	
 	CREATE_POINT(Pt_5);
-	Pt_5->SetupAttachment(GetRootComponent());
-	
 	CREATE_POINT(Pt_6);
-	Pt_6->SetupAttachment(GetRootComponent());
-	
 	CREATE_POINT(Pt_7);
-	Pt_7->SetupAttachment(GetRootComponent());
-	
 	CREATE_POINT(Pt_8);
-	Pt_8->SetupAttachment(GetRootComponent());
-	
 	CREATE_POINT(Pt_9);
-	Pt_9->SetupAttachment(GetRootComponent());
 }
 
 TArray<USceneComponent*> APointCollection::GetGroundPoints(const FVector& GroundLocation, int32 NumPoints,
 	float YawOverride) const
 {
-	checkf(ImmutablePts.Num() >= NumPoints, TEXT("Attempted to access ImmutablePoints out of bounds"));
+	checkf(ImmutablePts.Num() > NumPoints, TEXT("Attempted to access ImmutablePoints out of bounds"));
 	
 	TArray<USceneComponent*> Result;
 	for (USceneComponent* Pt : ImmutablePts)
