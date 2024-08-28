@@ -31,6 +31,19 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float DeathImpulseMagnitude = 3000.f;
 
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial Damage")
+	bool bIsRadialDamage = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial Damage")
+	float RadialDamageInnerRadius = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial Damage")
+	float RadialDamageOuterRadius = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Damage|Radial Damage")
+	FVector RadialDamageOrigin = FVector::ZeroVector;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Knockback")
 	float KnockbackForceMagnitude = 1000.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Knockback")
