@@ -10,6 +10,7 @@
 #include "AbilitySystem/AuraAttributeSet.h"
 #include "AbilitySystem/Data/CharacterClassInfo.h"
 #include "Interaction/CombatInterface.h"
+#include "Kismet/GameplayStatics.h"
 
 struct AuraDamageStatics
 {
@@ -148,6 +149,7 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 	DetermineDebuff(ExecutionParams, Spec, EvaluateParameters, AuraTags, TagsToCaptureDefs); 
 
 
+	const bool bIsRadialDamage = UAuraAbilitySystemLibrary::IsRadialDamage(EffectContextHandle);
 	//Get Damage Set by Caller Magnitude
 	float Damage = 0.f;
 	for (const auto& [DamageTypeTag, ResistanceTag] : AuraTags.DamageTypesToResistances)
@@ -156,12 +158,48 @@ void UExecCalc_Damage::Execute_Implementation(const FGameplayEffectCustomExecuti
 		auto ResistanceCaptureDef = TagsToCaptureDefs[ResistanceTag];
 
 		float DamageTypeValue = Spec.GetSetByCallerMagnitude(DamageTypeTag, false);
+		if(DamageTypeValue <= 0.f)
+		{
+			continue;
+		}
 		
 		float Resistance = 0.f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ResistanceCaptureDef, EvaluateParameters, Resistance);
 		Resistance = FMath::Clamp(Resistance, 0.f, 100.f);
 
 		DamageTypeValue *= (100.f - Resistance) / 100.f;
+
+		//Check and apply radial damage
+		if(bIsRadialDamage)
+		{
+			// 1. override take damage in aura character base class
+			// 2. create delegate OnDamageDelegate, broadcast damage received in TakeDamage
+			// 3. bind lambda to OnDamageDelegate on the victim here
+			// 4. Call UGameplayStatics::ApplyRadialDamageWithFallOf (this will result in TakeDamage being called)
+			// on the victim, which will then broadcast OnDamageDelegate
+			// 5. In Lambda, Set DamageTypeValue to the received from the broadcast
+			if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(TargetAvatar))
+			{
+				CombatInterface->GetOnDamageDelegate().AddLambda([&DamageTypeValue](float DamageAmount)
+				{
+					DamageTypeValue = DamageAmount;
+				});
+				
+				UGameplayStatics::ApplyRadialDamageWithFalloff(
+						TargetAvatar,
+						DamageTypeValue,
+						0.f,
+						UAuraAbilitySystemLibrary::GetRadialDamageOrigin(EffectContextHandle),
+						UAuraAbilitySystemLibrary::GetRadialDamageInnerRadius(EffectContextHandle),
+						UAuraAbilitySystemLibrary::GetRadialDamageOuterRadius(EffectContextHandle),
+						1.f,
+						UDamageType::StaticClass(),
+						TArray<AActor*>{},
+						SourceAvatar,
+						nullptr
+					);
+			}
+		}
 		
 		Damage += DamageTypeValue;
 	} 

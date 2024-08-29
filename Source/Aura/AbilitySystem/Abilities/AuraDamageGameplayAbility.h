@@ -31,6 +31,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Damage")
 	float DeathImpulseMagnitude = 3000.f;
 
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Radial Damage")
+	bool bIsRadialDamage = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Radial Damage")
+	float RadialDamageInnerRadius = 0.f;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Damage|Radial Damage")
+	float RadialDamageOuterRadius = 0.f;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Knockback")
 	float KnockbackForceMagnitude = 1000.f;
 	UPROPERTY(EditDefaultsOnly, Category = "Knockback")
@@ -59,7 +69,15 @@ public:
 	void CauseDamage(AActor* TargetActor);
 
 	UFUNCTION(BlueprintCallable)
-	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(AActor* TargetActor = nullptr) const;
+	FDamageEffectParams MakeDamageEffectParamsFromClassDefaults(
+		AActor* TargetActor = nullptr,
+		FVector InRadialDamageOrigin = FVector::ZeroVector,
+		bool bOverrideKnockbackDirection = false,
+		FVector InKnockbackDirectionOverride = FVector::ZeroVector,
+		bool bOverrideDeathImpulse = false,
+		FVector InDeathImpulseOverride = FVector::ZeroVector,
+		bool bOverridePitch = false,
+		float InPitchOverride = 45.f) const;
 
 	UFUNCTION(BlueprintCallable)
 	float GetDamageAtLevel() const;
