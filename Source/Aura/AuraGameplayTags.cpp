@@ -305,7 +305,9 @@ void FAuraGameplayTags::InitializeNativeGameplayTags()
 		FName{"Cooldown.Lightning.Electrocute"},
 		FString{"Electrocute Cooldown Tag"});
 
-	
+	GameplayTags.Cooldown_Arcane_ArcaneShards = TagManager.AddNativeGameplayTag(
+		FName{"Cooldown.Arcane.ArcaneShards"},
+		FString{"Arcane Shards Cooldown Tag"});
 	/*
 	 * Combat sockets
 	 */
