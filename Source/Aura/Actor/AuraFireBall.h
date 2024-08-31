@@ -19,6 +19,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<AActor> ReturnToActor;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Aura FireBall")
+	FDamageEffectParams ExplosionDamageEffectParams;
+
 protected:
 
 	virtual void BeginPlay() override;
