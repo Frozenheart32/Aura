@@ -67,4 +67,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable, meta=(BlueprintProtected))
 	void OnHit();
+
+	bool IsValidOverlap(AActor* OtherActor) const;
 };
