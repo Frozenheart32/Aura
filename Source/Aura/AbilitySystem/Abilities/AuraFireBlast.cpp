@@ -3,6 +3,9 @@
 
 #include "AbilitySystem/Abilities/AuraFireBlast.h"
 
+#include "AbilitySystem/AuraAbilitySystemLibrary.h"
+#include "Actor/AuraFireBall.h"
+
 FString UAuraFireBlast::GetDescription(int32 CurrentLevel) const
 {
 	const int32 ScaledDamage = Damage.GetValueAtLevel(CurrentLevel);
@@ -75,5 +78,32 @@ FString UAuraFireBlast::GetNextLevelDescription(int32 CurrentLevel) const
 
 TArray<AAuraFireBall*> UAuraFireBlast::SpawnFireBalls()
 {
-	return TArray<AAuraFireBall*>{};
+	TArray<AAuraFireBall*> SpawnedFireBalls{};
+
+	const FVector Location = GetAvatarActorFromActorInfo()->GetActorLocation();
+	const FVector Forward = GetAvatarActorFromActorInfo()->GetActorForwardVector();
+	//Get "Nova" directions
+	const TArray<FRotator> FireBallDirections = UAuraAbilitySystemLibrary::EvenlySpacedRotators(Forward, FVector::UpVector, 360.f, NumFireBalls);
+
+	for (const auto& Rotator : FireBallDirections)
+	{
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(Location);
+		SpawnTransform.SetRotation(Rotator.Quaternion());
+		
+		AAuraFireBall* FireBall = GetWorld()->SpawnActorDeferred<AAuraFireBall>(
+			FireBallClass,
+			SpawnTransform,
+			GetOwningActorFromActorInfo(),
+			CurrentActorInfo->PlayerController->GetPawn(),
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+
+		
+		FireBall->DamageEffectParams = MakeDamageEffectParamsFromClassDefaults();
+		SpawnedFireBalls.Add(FireBall);
+
+		FireBall->FinishSpawning(SpawnTransform);
+	} 
+	
+	return SpawnedFireBalls;
 }
