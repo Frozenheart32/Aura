@@ -72,3 +72,8 @@ FString UAuraFireBlast::GetNextLevelDescription(int32 CurrentLevel) const
 			FMath::Min(NumFireBalls, NextLevel),
 			ScaledDamage);
 }
+
+TArray<AAuraFireBall*> UAuraFireBlast::SpawnFireBalls()
+{
+	return TArray<AAuraFireBall*>{};
+}
