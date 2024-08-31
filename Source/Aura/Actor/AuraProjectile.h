@@ -64,7 +64,7 @@ protected:
 
 	UFUNCTION()
 	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult);
-	
-	void OnHit();
 
+	UFUNCTION(BlueprintCallable, meta=(BlueprintProtected))
+	void OnHit();
 };
