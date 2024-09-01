@@ -437,6 +437,8 @@ int32 UAuraAbilitySystemLibrary::GetXPRewardForClassAndLevel(const UObject* Worl
 
 FGameplayEffectContextHandle UAuraAbilitySystemLibrary::ApplyDamageEffect(const FDamageEffectParams& Params)
 {
+	if(!IsValid(Params.TargetAbilitySystemComponent) || !IsValid(Params.SourceAbilitySystemComponent)) return FGameplayEffectContextHandle{};
+	
 	const auto& AuraTags = FAuraGameplayTags::Get();
 	const AActor* SourceAvatarActor = Params.SourceAbilitySystemComponent->GetAvatarActor();
 	
@@ -546,5 +548,39 @@ void UAuraAbilitySystemLibrary::GetClosestTargets(TArray<AActor*>& OutClosestAct
 		OutClosestActors.AddUnique(ClosestActor);
 		
 		NumTargetToFound++;
+	}
+}
+
+void UAuraAbilitySystemLibrary::SetIsRadialDamageEffectParam(FDamageEffectParams& Param, bool bIsRadial, float InnerRadius, float OuterRadius, FVector Origin)
+{
+	Param.bIsRadialDamage = bIsRadial;
+	Param.RadialDamageInnerRadius = InnerRadius;
+	Param.RadialDamageOuterRadius = OuterRadius;
+	Param.RadialDamageOrigin = Origin;
+}
+
+void UAuraAbilitySystemLibrary::SetKnockBackDirectionEffectParam(FDamageEffectParams& Param, FVector KnockBackDirection, float Magnitude)
+{
+	KnockBackDirection.Normalize();
+	if(FMath::IsNearlyZero(Magnitude))
+	{
+		Param.KnockbackForce = KnockBackDirection * Param.KnockbackForceMagnitude;	
+	}
+	else
+	{
+		Param.KnockbackForce = KnockBackDirection * Magnitude;
+	}
+}
+
+void UAuraAbilitySystemLibrary::SetDeathImpulseEffectParam(FDamageEffectParams& Param, FVector ImpulseDirection, float Magnitude)
+{
+	ImpulseDirection.Normalize();
+	if(FMath::IsNearlyZero(Magnitude))
+	{
+		Param.DeathImpulse = ImpulseDirection * Param.DeathImpulseMagnitude;
+	}
+	else
+	{
+		Param.DeathImpulse = ImpulseDirection * Magnitude;
 	}
 }

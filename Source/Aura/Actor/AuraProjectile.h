@@ -40,18 +40,18 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE UProjectileMovementComponent* GetMovementComponent() const { return  MovementComponent; }
 
-private:
+protected:
 
 	bool bHit = false;
 	
 	UPROPERTY(EditDefaultsOnly)
 	float LifeSpan = 15.f;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<USphereComponent> Sphere;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta=(AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	TObjectPtr<UProjectileMovementComponent> MovementComponent;
-
+	
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<UNiagaraSystem> ImpactEffect;
 	UPROPERTY(EditAnywhere)
@@ -63,8 +63,10 @@ private:
 	TObjectPtr<UAudioComponent> LoopingSoundComponent;
 
 	UFUNCTION()
-	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult);
-	
-	void OnHit();
+	virtual void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bBFromSweep, const FHitResult& SweepResult);
 
+	UFUNCTION(BlueprintCallable, meta=(BlueprintProtected))
+	virtual void OnHit();
+
+	bool IsValidOverlap(AActor* OtherActor) const;
 };

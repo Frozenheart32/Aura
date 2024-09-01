@@ -93,6 +93,7 @@ public:
 	FGameplayTag Abilities_Type_None;
 
 	FGameplayTag Abilities_Fire_Firebolt;
+	FGameplayTag Abilities_Fire_FireBlast;
 
 	FGameplayTag Abilities_Lightning_Electrocute;
 
@@ -103,6 +104,7 @@ public:
 	FGameplayTag Abilities_Passive_ManaSiphon;
 
 	FGameplayTag Cooldown_Fire_Firebolt;
+	FGameplayTag Cooldown_Fire_FireBlast;
 	FGameplayTag Cooldown_Lightning_Electrocute;
 	FGameplayTag Cooldown_Arcane_ArcaneShards;
 
@@ -127,6 +129,8 @@ public:
 	FGameplayTag Player_Block_InputHeld;
 	FGameplayTag Player_Block_InputReleased;
 	FGameplayTag Player_Block_CursorTrace;
+
+	FGameplayTag GameplayCue_FireBlast;
 
 private:
 

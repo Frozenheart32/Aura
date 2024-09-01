@@ -128,4 +128,15 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|GameplayMechanics")
 	static void GetClosestTargets(TArray<AActor*>& OutClosestActors, int32 MaxTargets, const TArray<AActor*>& Actors, const FVector& Origin);
+
+
+	/*
+	 * Damage effect params
+	 */
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|Damage effect params")
+	static void SetIsRadialDamageEffectParam(UPARAM(ref)FDamageEffectParams& Param, bool bIsRadial, float InnerRadius, float OuterRadius, FVector Origin);
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|Damage effect params")
+	static void SetKnockBackDirectionEffectParam(UPARAM(ref)FDamageEffectParams& Param, FVector KnockBackDirection, float Magnitude = 0.f);
+	UFUNCTION(BlueprintCallable, Category = "AuraAbilitySystemLibrary|Damage effect params")
+	static void SetDeathImpulseEffectParam(UPARAM(ref)FDamageEffectParams& Param, FVector ImpulseDirection, float Magnitude = 0.f);
 };
